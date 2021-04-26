@@ -8,6 +8,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {NgxsModule} from '@ngxs/store';
 import { environment } from 'src/environments/environment';
 import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -20,6 +21,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     AppRoutingModule,
     SocketIoModule.forRoot(config),
     NgbModule,
+    FontAwesomeModule,
     NgxsModule.forRoot([], {
       developmentMode: !environment.production
     }),
