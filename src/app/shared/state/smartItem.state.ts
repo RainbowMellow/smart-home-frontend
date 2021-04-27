@@ -30,6 +30,7 @@ export class SmartItemState {
   getSmartItems(ctx: StateContext<SmartItemStateModel>): void {
     this.smartItemsUnsub = this.smartItemService.listenForAllSmartItems()
       .subscribe(smartItems => {
+        console.log('Items received');
         ctx.dispatch(new UpdateSmartItems(smartItems));
       });
   }

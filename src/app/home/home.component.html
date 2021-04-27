@@ -1,3 +1,4 @@
+
 <table class="table table-hover">
   <thead>
   <tr>
@@ -7,9 +8,8 @@
     <th scope="col">ON/OFF</th>
   </tr>
   </thead>
-  <tbody>
-  <div *ngIf="smartItems$ | async as smartItems">
-    <tr *ngFor="let smartItem of smartItems">
+  <tbody *ngFor="let smartItem of smartItems$ | async">
+    <tr >
       <td>{{smartItem.name}}</td>
       <td>{{smartItem.xPos}}</td>
       <td>{{smartItem.yPos}}</td>
@@ -18,6 +18,5 @@
         <span *ngIf="!smartItem.on">Off</span>
       </td>
     </tr>
-  </div>
   </tbody>
 </table>
