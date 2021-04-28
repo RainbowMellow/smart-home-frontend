@@ -1,0 +1,4 @@
+<p>Log:</p>
+<ul class="list-group">
+  <li class="list-group-item" *ngFor="let message of logMessages$ | async">{{message.message}}</li>
+</ul>
