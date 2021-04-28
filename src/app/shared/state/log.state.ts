@@ -61,11 +61,11 @@ export class LogMessageState {
   }
 
   @Action(UpdateLogMessages)
-  UpdateLogMessages(ctx: StateContext<LogMessageStateModel>, updatedMessages): void {
+  UpdateLogMessages(ctx: StateContext<LogMessageStateModel>, action: UpdateLogMessages): void {
     const state = ctx.getState();
     const newState: LogMessageStateModel = {
       ...state,
-      logMessages: updatedMessages
+      logMessages: action.logMessages
     };
     ctx.setState(newState);
   }
