@@ -4,6 +4,10 @@ export class ListenForAllLogMessages {
   static readonly type = '[LogMessage] Listen for all log messages';
 }
 
+export class RequestAllLogMessages {
+  static readonly type = '[LogMessage] Request all log messages';
+}
+
 export class ListenForNewLogMessage {
   static readonly type = '[LogMessage] Listen for new log message';
 }

@@ -3,7 +3,7 @@ import {LogMessage} from '../../shared/models/log-message.model';
 import {Select, Store} from '@ngxs/store';
 import {
   ListenForAllLogMessages,
-  ListenForNewLogMessage,
+  ListenForNewLogMessage, RequestAllLogMessages,
   StopListeningForAllLogMessages,
   StopListeningForNewLogMessage
 } from '../../shared/state/log.actions';
@@ -25,14 +25,17 @@ export class LogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.dispatch([
       new ListenForAllLogMessages(),
-      new StopListeningForAllLogMessages(),
+      new RequestAllLogMessages(),
       new ListenForNewLogMessage()
       ]
       );
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch([new StopListeningForNewLogMessage()]);
+    this.store.dispatch([
+      new StopListeningForNewLogMessage(),
+      new StopListeningForAllLogMessages()
+    ]);
   }
 
 }

@@ -5,7 +5,7 @@ import {Subscription} from 'rxjs';
 import {LogService} from '../services/log.service';
 import {
   ListenForAllLogMessages,
-  ListenForNewLogMessage,
+  ListenForNewLogMessage, RequestAllLogMessages,
   StopListeningForAllLogMessages,
   StopListeningForNewLogMessage,
   UpdateLogMessages
@@ -42,6 +42,11 @@ export class LogMessageState {
       .subscribe(messages => {
         ctx.dispatch(new UpdateLogMessages(messages));
       });
+  }
+
+  @Action(RequestAllLogMessages)
+  RequestAllLogMessages(): void {
+    this.logService.requestAllLogMessages();
   }
 
   @Action(ListenForNewLogMessage)

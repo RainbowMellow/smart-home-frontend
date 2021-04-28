@@ -17,4 +17,8 @@ export class LogService {
   listenForNewLogMessage(): Observable<LogMessage> {
     return this.socket.fromEvent<LogMessage>('newLogMessage');
   }
+
+  requestAllLogMessages(): void {
+    this.socket.emit('requestLog');
+  }
 }
