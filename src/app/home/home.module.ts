@@ -6,6 +6,7 @@ import { HomeComponent } from './home.component';
 import {NgxsModule} from '@ngxs/store';
 import {SmartItemState} from '../shared/state/smartItem.state';
 import { LogComponent } from './log/log.component';
+import {LogMessageState} from '../shared/state/log.state';
 
 
 @NgModule({
@@ -13,7 +14,7 @@ import { LogComponent } from './log/log.component';
   imports: [
     CommonModule,
     HomeRoutingModule,
-    NgxsModule.forFeature([SmartItemState])
+    NgxsModule.forFeature([SmartItemState, LogMessageState])
   ]
 })
 export class HomeModule { }
