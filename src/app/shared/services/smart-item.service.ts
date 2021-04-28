@@ -18,6 +18,5 @@ export class SmartItemService {
   requestAllSmartItems(): void
   {
     this.socket.emit('requestSmartItems');
-    console.log('Items have been requested');
   }
 }

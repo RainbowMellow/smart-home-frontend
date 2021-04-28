@@ -20,9 +20,7 @@ export class HomeComponent implements OnInit {
               private service: SmartItemService) { }
 
   ngOnInit(): void {
-    this.store.dispatch(new ListenForSmartItems());
-    // this.store.dispatch(new RequestSmartItems());
-    this.service.requestAllSmartItems();
+    this.store.dispatch([new ListenForSmartItems(), new RequestSmartItems()]);
   }
 
 }
