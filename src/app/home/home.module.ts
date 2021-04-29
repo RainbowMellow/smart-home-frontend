@@ -7,10 +7,11 @@ import {NgxsModule} from '@ngxs/store';
 import {SmartItemState} from '../shared/state/smartItem.state';
 import { LogComponent } from './log/log.component';
 import {LogMessageState} from '../shared/state/log.state';
+import { UserComponent } from './user/user.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, LogComponent],
+  declarations: [HomeComponent, LogComponent, UserComponent],
   imports: [
     CommonModule,
     HomeRoutingModule,
