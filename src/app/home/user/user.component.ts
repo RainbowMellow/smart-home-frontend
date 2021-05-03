@@ -3,7 +3,8 @@ import {Select, Store} from '@ngxs/store';
 import {UserState} from '../../shared/state/user.state';
 import {Observable} from 'rxjs';
 import {User} from '../../shared/models/user.model';
-import {ListenForLogin} from '../../shared/state/user.actions';
+import {ListenForLogin, RequestLogin, StopListeningForLogin} from '../../shared/state/user.actions';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-user',
@@ -12,6 +13,7 @@ import {ListenForLogin} from '../../shared/state/user.actions';
 })
 export class UserComponent implements OnInit, OnDestroy {
 
+  nameFormControl = new FormControl('');
   @Select(UserState.loggedInUser)
   loggedInUser$: Observable<User> | undefined;
 
@@ -22,6 +24,13 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.store.dispatch(new StopListeningForLogin());
   }
 
+  requestLogin(): void {
+    if  (this.nameFormControl.value) {
+      const user: User = { name: this.nameFormControl.value };
+      this.store.dispatch(new RequestLogin(user));
+    }
+  }
 }

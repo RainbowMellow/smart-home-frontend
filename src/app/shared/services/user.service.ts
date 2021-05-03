@@ -8,8 +8,6 @@ import {Observable} from 'rxjs';
 })
 export class UserService {
 
-  loggedInUser: User;
-
   constructor(private socket: Socket) {}
 
   listenForLogin(): Observable<User> {

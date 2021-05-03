@@ -42,8 +42,9 @@ export class UserState {
   }
 
   @Action(RequestLogin)
-  requestLogin(action: RequestLogin): void {
-    this.userService.requestLogin(action.user);
+  requestLogin(ctx: StateContext<UserStateModel>, action: RequestLogin): void {
+    const user: User = action.user;
+    this.userService.requestLogin(user);
   }
 
   @Action(StopListeningForLogin)
