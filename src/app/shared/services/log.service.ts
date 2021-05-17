@@ -21,4 +21,8 @@ export class LogService {
   requestAllLogMessages(): void {
     this.socket.emit('requestLog');
   }
+
+  triggerLogMessage(logMessage: LogMessage): void {
+    this.socket.emit('triggerLogMessage', logMessage);
+  }
 }

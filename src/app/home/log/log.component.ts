@@ -34,7 +34,7 @@ export class LogComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.store.dispatch([
       new StopListeningForNewLogMessage(),
-      new StopListeningForAllLogMessages()
+      new StopListeningForAllLogMessages() // alternatively, call this on ListenForAllLogMessages.subscribe() in log.state.ts
     ]);
   }
 

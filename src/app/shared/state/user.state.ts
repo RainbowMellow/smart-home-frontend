@@ -4,6 +4,7 @@ import {Injectable} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {UserService} from '../services/user.service';
 import {ListenForLogin, RequestLogin, StopListeningForLogin} from './user.actions';
+import {LogService} from '../services/log.service';
 
 export interface UserStateModel {
   loggedInUser: User;
@@ -20,7 +21,8 @@ export interface UserStateModel {
 export class UserState {
   private loginUnsub: Subscription | undefined;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService,
+              private logService: LogService) {
   }
 
   @Selector()
@@ -38,6 +40,10 @@ export class UserState {
           loggedInUser: user
         };
         ctx.setState(newState);
+        this.logService.triggerLogMessage({
+          user,
+          message: 'User has logged in',
+          timeStamp: new Date()});
       });
   }
 
