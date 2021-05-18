@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
 
   @Select(SmartItemState.smartItems)
   smartItems$: Observable<SmartItem[]> | undefined;
-  smartItem: SmartItem;
+  selectedSmartItem: SmartItem;
 
   constructor(private store: Store,
               private service: SmartItemService) { }
@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
       name: 'Lamp'
     };
 
-    this.smartItem = {
+    this.selectedSmartItem = {
       name: 'Lamp',
       category: cate,
       xPos: 2,
@@ -36,5 +36,21 @@ export class HomeComponent implements OnInit {
       on: true
     };
 
+  onSelect(smartItem: SmartItem): void {
+    smartItem.on = !true;
+    this.selectedItem = smartItem;
+  }
+
+  toggle(): void {
+    // tell backend (state) to toggle
+    // by using selectedItem id and on bool to create toggleDto?
+    /*
+    const toggleSmartItemDto: updateSmartItemDto = {
+      id: this.stock.id,
+      on: !smartItem.on
+    };
+
+    this.smartItemService.update(SmartItemUpdateDto);
+    */
   }
 }

@@ -1,17 +1,29 @@
 <app-user></app-user>
 
-<div class="row">
-  <div class="col-6" style="margin-right: auto; margin-left: auto">
-    <table class="table table-hover">
-      <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">X Position</th>
-        <th scope="col">Y Position</th>
-        <th scope="col">ON/OFF</th>
-      </tr>
-      </thead>
-      <tbody *ngFor="let smartItem of smartItems$ | async">
+<div *ngIf="smartItems$ | async as smartItems">
+  <h1>Floorplan</h1>
+  <h2>Ground floor</h2>
+  <div class="floorplan">
+    <button type="button" *ngFor="let smartItem of smartItems"
+         class="btn smart-item switch {{smartItem.on ? 'on' : 'off'}}"
+         style="top: {{smartItem.yPos}}px; left: {{smartItem.xPos}}px;"
+         ngbPopover="{{smartItem.name}}" triggers="mouseenter:mouseleave" (click)="onSelect(smartItem)">
+      {{smartItem.name}}
+    </button>
+  </div>
+  <br>
+  <br>
+  <h2>All Smart Items:</h2>
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">X Position</th>
+      <th scope="col">Y Position</th>
+      <th scope="col">ON/OFF</th>
+    </tr>
+    </thead>
+    <tbody *ngFor="let smartItem of smartItems">
       <tr>
         <td>{{smartItem.name}}</td>
         <td>{{smartItem.xPos}}</td>
@@ -21,10 +33,14 @@
           <span *ngIf="!smartItem.on">Off</span>
         </td>
       </tr>
-      </tbody>
-    </table>
-  </div>
+    </tbody>
+  </table>
+
   <app-detail style="margin-right: auto" [currentSmartItem]="smartItem"></app-detail>
 </div>
 
 <app-log></app-log>
+
+<div *ngIf="!smartItems$">
+  No Smart Items created yet..
+</div>
