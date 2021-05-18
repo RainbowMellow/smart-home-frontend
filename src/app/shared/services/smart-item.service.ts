@@ -21,9 +21,9 @@ export class SmartItemService {
     this.socket.emit('requestSmartItems');
   }
 
-  deleteSmartItem(id: number): void
+  deleteSmartItem(smartItem: SmartItem): void
   {
-    this.socket.emit('deleteSmartItem', id);
+    this.socket.emit('deleteSmartItem', smartItem);
   }
 
   listenForDeleteSmartItem(): Observable<SmartItem> {
@@ -35,8 +35,8 @@ export class SmartItemService {
     this.socket.emit('editSmartItem', editDTO);
   }
 
-  listenForEditSmartItem(): Observable<SmartItem[]>
+  listenForEditSmartItem(): Observable<SmartItem>
   {
-    return this.socket.fromEvent<SmartItem[]>('editedSmartItem');
+    return this.socket.fromEvent<SmartItem>('editedSmartItem');
   }
 }

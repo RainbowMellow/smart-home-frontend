@@ -39,13 +39,10 @@ export class DetailComponent implements OnInit {
       xPos: this.xPosDetail.value,
       yPos: this.yPosDetail.value
     };
-
-    this.store.dispatch(new ListenForEditSmartItem());
     this.store.dispatch(new EditSmartItem(editDto));
   }
 
   deleteSmartItem(): void {
-    this.store.dispatch(new ListenForDeletedSmartItem());
-    this.store.dispatch(new DeleteSmartItem(this.currentSmartItem.id));
+    this.store.dispatch(new DeleteSmartItem(this.currentSmartItem));
   }
 }

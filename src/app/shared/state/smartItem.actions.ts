@@ -19,7 +19,7 @@ constructor(public smartItems: SmartItem[]) {}
 }
 
 export class DeleteSmartItem {
-  constructor(public id: number) {}
+  constructor(public smartItem: SmartItem) {}
   static readonly type = '[SmartItem] Delete SmartItem';
 }
 

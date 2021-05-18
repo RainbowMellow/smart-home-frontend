@@ -65,8 +65,8 @@ export class SmartItemState {
   }
 
   @Action(DeleteSmartItem)
-  deleteSmartItem(id: number): void {
-    this.smartItemService.deleteSmartItem(id);
+  deleteSmartItem(smartItem: SmartItem): void {
+    this.smartItemService.deleteSmartItem(smartItem);
   }
 
   @Action(ListenForDeletedSmartItem)
@@ -88,7 +88,11 @@ export class SmartItemState {
   @Action(ListenForEditSmartItem)
   listenForEditedSmartItem(ctx: StateContext<SmartItemStateModel>): void {
     this.smartItemsUnsub = this.smartItemService.listenForEditSmartItem()
-      .subscribe(smartItems => {
+      .subscribe(smartItem => {
+        const state = ctx.getState();
+        const smartItems = [...state.smartItems];
+        const index = smartItems.findIndex((s) => s.id === smartItem.id);
+        smartItems[index] = smartItem;
         ctx.dispatch(new UpdateSmartItems(smartItems));
       });
   }
