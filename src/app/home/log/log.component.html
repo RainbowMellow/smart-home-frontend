@@ -1,6 +1,8 @@
 <p>Log:</p>
 <ul class="list-group">
   <li class="list-group-item border-0" *ngFor="let message of logMessages$ | async">
-    {{message.timeStamp | date: 'shortTime'}} | {{message.user?.name}} | {{message.message}}
+    {{message.timeStamp | date: 'shortTime'}} |
+    <span *ngIf="message.userString && message.userString.length > 0">{{message.userString}} | </span>
+    {{message.message}}
   </li>
 </ul>

@@ -8,6 +8,12 @@ export class RequestAllLogMessages {
   static readonly type = '[LogMessage] Request all log messages';
 }
 
+export class TriggerNewLogMessage {
+  constructor(public message: LogMessage) {}
+
+  static readonly type = '[LogMessage] Trigger new log message';
+}
+
 export class ListenForNewLogMessage {
   static readonly type = '[LogMessage] Listen for new log message';
 }

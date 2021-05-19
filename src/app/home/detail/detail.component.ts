@@ -22,7 +22,7 @@ export class DetailComponent implements OnInit {
   constructor(private store: Store) { }
 
   ngOnInit(): void {
-    this.insertInfo(this.currentSmartItem);
+    // this.insertInfo(this.currentSmartItem);
   }
 
   insertInfo(smartItem: SmartItem): void {

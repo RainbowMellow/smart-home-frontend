@@ -17,4 +17,12 @@ export class UserService {
   requestLogin(user: User): void {
     this.socket.emit('requestLogin', user);
   }
+
+  listenForLogout(): Observable<User> {
+    return this.socket.fromEvent<User>('loggedOut');
+  }
+
+  requestLogout(user: User): void {
+    this.socket.emit('requestLogout', user);
+  }
 }
