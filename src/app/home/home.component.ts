@@ -16,14 +16,14 @@ export class HomeComponent implements OnInit {
 
   @Select(SmartItemState.smartItems)
   smartItems$: Observable<SmartItem[]> | undefined;
-  selectedSmartItem: SmartItem;
+  selectedSmartItem?: SmartItem;
 
   constructor(private store: Store,
               private service: SmartItemService) { }
 
   ngOnInit(): void {
     this.store.dispatch([new ListenForSmartItems(), new RequestSmartItems()]);
-
+/*
     const cate: Category = {
       name: 'Lamp'
     };
@@ -35,10 +35,14 @@ export class HomeComponent implements OnInit {
       yPos: 1,
       on: true
     };
+    */
+
+  }
 
   onSelect(smartItem: SmartItem): void {
-    smartItem.on = !true;
-    this.selectedItem = smartItem;
+    // smartItem.on = !smartItem.on;
+    this.selectedSmartItem = smartItem;
+    console.log('smartItem name: ' + smartItem.name);
   }
 
   toggle(): void {
