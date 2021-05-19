@@ -4,7 +4,7 @@
   <h1>Floorplan</h1>
   <h2>Ground floor</h2>
   <div class="flex-container">
-    <div class="floorplan flex-child">
+    <div class="floorplan rounded shadow-sm">
       <button type="button" *ngFor="let smartItem of smartItems"
               [ngClass]="smartItem.on ? 'on' : 'off'"
            class="btn smart-item switch"
@@ -14,7 +14,7 @@
       </button>
     </div>
     <div>
-      <app-detail class="flex-child" [smartItem]="selectedSmartItem"></app-detail>
+      <app-detail class="details" [smartItem]="selectedSmartItem"></app-detail>
     </div>
   </div>
   <br>

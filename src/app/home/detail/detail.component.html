@@ -1,10 +1,10 @@
 <div class="card detailCard">
-  <div class="card-body d-flex flex-column">
+  <div class="card-body d-flex flex-column rounded shadow-sm">
     <div *ngIf="!smartItem">
       Select a smart item to view its details.
     </div>
     <div *ngIf="smartItem" style="text-align: center">
-      <h4>Smart Item information:</h4>
+      <h4>Smart Item details</h4>
       <form [formGroup]="smartItemForm" (ngSubmit)="updateSmartItem()">
       <div class="row justify-content-center" style="margin-top: 30px">
         <h6 style="margin-right: 10px">Name:</h6>
