@@ -13,6 +13,11 @@ import {DeleteSmartItem, EditSmartItem, ListenForDeletedSmartItem, ListenForEdit
 })
 export class DetailComponent implements OnInit {
   smartItemForm: FormGroup;
+  categories = [
+    { id: 1, name: 'Mock Category 1' },
+    { id: 2, name: 'Mock Category 2' },
+    { id: 3, name: 'Mock Category 3' },
+  ];
 
   @Input() smartItem?: SmartItem;
 

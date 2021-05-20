@@ -6,46 +6,57 @@
     <div *ngIf="smartItem" style="text-align: center">
       <h4>Smart Item details</h4>
       <form [formGroup]="smartItemForm" (ngSubmit)="updateSmartItem()">
-      <div class="row justify-content-center" style="margin-top: 30px">
-        <h6 style="margin-right: 10px">Name:</h6>
-        <div class="form-group">
-          <input type="text" class="form-control" formControlName="name" style="width: 200px">
+        <h6 style="text-align: center; margin-top: 20px;">Status: </h6>
+        <div class="row justify-content-center mb-3">
+          Off
+          <div *ngIf="smartItem.on" class="custom-control custom-switch" style="margin-left: 7px">
+            <input type="checkbox" class="custom-control-input" id="customSwitches1" checked>
+            <label class="custom-control-label" for="customSwitches1">On</label>
+          </div>
+          <div *ngIf="!smartItem.on" class="custom-control custom-switch" style="margin-left: 7px">
+            <input type="checkbox" class="custom-control-input" id="customSwitches2">
+            <label class="custom-control-label" for="customSwitches2">On</label>
+          </div>
         </div>
-      </div>
-      <div class="row justify-content-center">
-        <h6 style="margin-right: 10px">Type:</h6>
-        <div class="form-group" formGroupName="category">
-          <input type="text"  class="form-control" formControlName="name" style="width: 150px">
+
+        <div class="form-group row">
+          <label for="name" class="col-sm-3 col-form-label">Name</label>
+          <div class="col-sm-9 form-inline">
+            <input type="text" class="form-control" formControlName="name" id="name">
+            <span class="validity"></span>
+          </div>
         </div>
-      </div>
-      <div class="row justify-content-center">
-        <h6 style="margin-right: 10px">X Pos:</h6>
-        <div class="form-group">
-          <input type="text"  class="form-control" formControlName="xPos" style="width: 70px">
+
+        <div class="form-group row">
+          <label for="category" class="col-sm-3 col-form-label">Category</label>
+          <div class="col-sm-9 form-inline">
+            <select formControlName="category" id="category" class="form-control">
+              <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+            </select>
+            <span class="validity"></span>
+          </div>
         </div>
-      </div>
-      <div class="row justify-content-center">
-        <h6 style="margin-right: 10px">Y Pos:</h6>
-        <div class="form-group">
-          <input type="text" class="form-control" formControlName="yPos" style="width: 70px">
+
+        <div class="form-group row">
+          <label for="xPos" class="col-sm-3 col-form-label">X-pos</label>
+          <div class="col-sm-9 form-inline">
+            <input type="text" class="form-control" formControlName="xPos" id="xPos">
+            <span class="validity"></span>
+          </div>
         </div>
-      </div>
-      <h6 style="text-align: center; margin-top: 20px">Status: </h6>
-      <div class="row justify-content-center">
-        Off
-        <div *ngIf="smartItem.on" class="custom-control custom-switch" style="margin-left: 7px">
-          <input type="checkbox" class="custom-control-input" id="customSwitches1" checked>
-          <label class="custom-control-label" for="customSwitches1">On</label>
+
+        <div class="form-group row">
+          <label for="yPos" class="col-sm-3 col-form-label">Y-pos</label>
+          <div class="col-sm-9 form-inline">
+            <input type="text" class="form-control" formControlName="yPos" id="yPos">
+            <span class="validity"></span>
+          </div>
         </div>
-        <div *ngIf="!smartItem.on" class="custom-control custom-switch" style="margin-left: 7px">
-          <input type="checkbox" class="custom-control-input" id="customSwitches2">
-          <label class="custom-control-label" for="customSwitches2">On</label>
+
+        <div class="row mt-auto">
+          <button class="btn btn-primary mr-1 ml-auto" type="submit">Update</button>
+          <button class="btn btn-primary mr-3" type="button" (click)="deleteSmartItem()">Delete</button>
         </div>
-      </div>
-      <div class="row mt-auto">
-        <button class="btn btn-primary ml-3" type="submit">Update</button>
-        <button class="btn btn-primary ml-auto mr-3" type="button" (click)="deleteSmartItem()">Delete</button>
-      </div>
       </form>
     </div>
   </div>
