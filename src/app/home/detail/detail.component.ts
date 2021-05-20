@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
 import {SmartItem} from '../../shared/models/smartItem.model';
-import {FormControl} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {Category} from '../../shared/models/category.model';
 import {EditSmartItemDto} from './dtos/editSmartItem.dto';
 import {Store} from '@ngxs/store';
@@ -12,37 +12,46 @@ import {DeleteSmartItem, EditSmartItem, ListenForDeletedSmartItem, ListenForEdit
   styleUrls: ['./detail.component.scss']
 })
 export class DetailComponent implements OnInit {
-  nameDetail = new FormControl('');
-  typeDetail = new FormControl('');
-  xPosDetail = new FormControl('');
-  yPosDetail = new FormControl('');
+  smartItemForm: FormGroup;
+  categories = [
+    { id: 1, name: 'Mock Category 1' },
+    { id: 2, name: 'Mock Category 2' },
+    { id: 3, name: 'Mock Category 3' },
+  ];
 
-  @Input() currentSmartItem: SmartItem;
+  @Input() smartItem?: SmartItem;
 
-  constructor(private store: Store) { }
+  constructor(private fb: FormBuilder, private store: Store) { }
 
   ngOnInit(): void {
-    // this.insertInfo(this.currentSmartItem);
+    this.smartItemForm = this.fb.group({
+      name: [''],
+      category: this.fb.group({
+        id: [''],
+        name: ['']
+      }),
+      xPos: [''],
+      yPos: [''],
+      on: ['']
+    });
   }
 
-  insertInfo(smartItem: SmartItem): void {
-    this.nameDetail.setValue(smartItem.name);
-    this.typeDetail.setValue(smartItem.category.name);
-    this.xPosDetail.setValue(smartItem.xPos);
-    this.yPosDetail.setValue(smartItem.yPos);
+  ngOnChanges(changes: SimpleChanges): void {
+    this.smartItemForm.patchValue(changes.smartItem.currentValue);
   }
 
-  saveSmartItem(): void {
-    const editDto: EditSmartItemDto = {
-      id: this.currentSmartItem.id,
-      name: this.nameDetail.value,
-      xPos: this.xPosDetail.value,
-      yPos: this.yPosDetail.value
-    };
-    this.store.dispatch(new EditSmartItem(editDto));
+  updateSmartItem(): void {
+    // const editDto: EditSmartItemDto = this.smartItemForm.value;
+    // editDto.id = this.smartItem.id;
+
+    // this.store.dispatch(new ListenForEditSmartItem());
+    // this.store.dispatch(new EditSmartItem(editDto));
+    // console.warn(this.smartItemForm.value);
+    this.smartItemForm.patchValue(this.smartItem);
   }
 
   deleteSmartItem(): void {
-    this.store.dispatch(new DeleteSmartItem(this.currentSmartItem));
+    // this.store.dispatch(new ListenForDeletedSmartItem());
+    this.store.dispatch(new DeleteSmartItem(this.smartItem));
   }
 }

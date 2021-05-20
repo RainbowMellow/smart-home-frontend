@@ -21,13 +21,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   smartItems$: Observable<SmartItem[]> | undefined;
   @Select(UserState.loggedInUser)
   loggedInUser$: Observable<User> | undefined;
-  selectedSmartItem: SmartItem;
+  selectedSmartItem?: SmartItem;
 
   constructor(private store: Store,
               private service: SmartItemService) { }
 
   ngOnInit(): void {
     this.store.dispatch([new ListenForSmartItems(), new RequestSmartItems()]);
+/*
     const cate: Category = {
       name: 'Lamp'
     };
@@ -39,6 +40,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       yPos: 1,
       on: true
     };
+    */
+
   }
 
   onSelect(smartItem: SmartItem): void {

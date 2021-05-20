@@ -4,13 +4,19 @@
 <div *ngIf="smartItems$ | async as smartItems">
   <h1>Floorplan</h1>
   <h2>Ground floor</h2>
-  <div class="floorplan">
-    <button type="button" *ngFor="let smartItem of smartItems"
-         class="btn smart-item switch {{smartItem.on ? 'on' : 'off'}}"
-         style="top: {{smartItem.yPos}}px; left: {{smartItem.xPos}}px;"
-         ngbPopover="{{smartItem.name}}" triggers="mouseenter:mouseleave" (click)="onSelect(smartItem)">
-      {{smartItem.name}}
-    </button>
+  <div class="flex-container">
+    <div class="floorplan rounded shadow-sm">
+      <button type="button" *ngFor="let smartItem of smartItems"
+              [ngClass]="smartItem.on ? 'on' : 'off'"
+           class="btn smart-item switch"
+           style="top: {{smartItem.yPos}}px; left: {{smartItem.xPos}}px;"
+           ngbPopover="{{smartItem.name}}" triggers="mouseenter:mouseleave" (click)="onSelect(smartItem)">
+        {{smartItem.name}}
+      </button>
+    </div>
+    <div>
+      <app-detail class="details" [smartItem]="selectedSmartItem"></app-detail>
+    </div>
   </div>
   <br>
   <br>
@@ -36,11 +42,9 @@
       </tr>
     </tbody>
   </table>
-
-  <app-detail style="margin-right: auto" [currentSmartItem]="selectedSmartItem"></app-detail>
 </div>
 
-  <app-log></app-log>
+<app-log></app-log>
 
 <div *ngIf="!smartItems$">
   No Smart Items created yet..
