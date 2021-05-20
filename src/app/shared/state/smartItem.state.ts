@@ -4,14 +4,24 @@ import {Injectable} from '@angular/core';
 import {SmartItemService} from '../services/smart-item.service';
 import {Subscription} from 'rxjs';
 import {
-  DeleteSmartItem, EditSmartItem,
-  ListenForDeletedSmartItem, ListenForEditSmartItem,
-  ListenForSmartItems,
+  CreateSmartItem,
+  DeleteSmartItem,
+  EditSmartItem,
+  ListenForAllSmartItems,
+  ListenForDeletedSmartItem,
+  ListenForEditedSmartItem,
+  ListenForNewSmartItem, ListenForToggledSmartItem,
   RequestSmartItems,
-  StopListeningForSmartItems,
+  StopListeningForAllSmartItems,
+  StopListeningForDeletedSmartItem,
+  StopListeningForEditedSmartItem,
+  StopListeningForNewSmartItem, StopListeningForToggledSmartItem,
+  ToggleSmartItem,
   UpdateSmartItems
 } from './smartItem.actions';
-import {EditSmartItemDto} from '../../home/detail/dtos/editSmartItem.dto';
+import {EditSmartItemDto} from '../dtos/editSmartItem.dto';
+import {CreateSmartItemDto} from '../dtos/createSmartItem.dto';
+import {ToggleDto} from '../dtos/toggle.dto';
 
 export interface SmartItemStateModel {
   smartItems: SmartItem[];
@@ -25,7 +35,11 @@ export interface SmartItemStateModel {
 })
 @Injectable()
 export class SmartItemState {
-  private smartItemsUnsub: Subscription | undefined;
+  private allSmartItemsUnsub: Subscription | undefined;
+  private deletedSmartItemsUnsub: Subscription | undefined;
+  private editedSmartItemsUnsub: Subscription | undefined;
+  private createdSmartItemsUnsub: Subscription | undefined;
+  private toggledSmartItemsUnsub: Subscription | undefined;
   constructor(private smartItemService: SmartItemService) {
   }
 
@@ -34,18 +48,18 @@ export class SmartItemState {
     return state.smartItems;
   }
 
-  @Action(ListenForSmartItems)
+  @Action(ListenForAllSmartItems)
   getSmartItems(ctx: StateContext<SmartItemStateModel>): void {
-    this.smartItemsUnsub = this.smartItemService.listenForAllSmartItems()
+    this.allSmartItemsUnsub = this.smartItemService.listenForAllSmartItems()
       .subscribe(smartItems => {
         ctx.dispatch(new UpdateSmartItems(smartItems));
       });
   }
 
-  @Action(StopListeningForSmartItems)
-  stopListeningForSmartItems(): void {
-    if (this.smartItemsUnsub) {
-      this.smartItemsUnsub.unsubscribe();
+  @Action(StopListeningForAllSmartItems)
+  stopListeningForAllSmartItems(): void {
+    if (this.allSmartItemsUnsub) {
+      this.allSmartItemsUnsub.unsubscribe();
     }
   }
 
@@ -65,29 +79,36 @@ export class SmartItemState {
   }
 
   @Action(DeleteSmartItem)
-  deleteSmartItem(smartItem: SmartItem): void {
-    this.smartItemService.deleteSmartItem(smartItem);
+  deleteSmartItem(ctx: StateContext<SmartItemStateModel>, action: DeleteSmartItem): void {
+    this.smartItemService.deleteSmartItem(action.id);
   }
 
   @Action(ListenForDeletedSmartItem)
   listenForDeletedSmartItem(ctx: StateContext<SmartItemStateModel>): void {
-    this.smartItemsUnsub = this.smartItemService.listenForDeleteSmartItem()
-      .subscribe(smartItem => {
+    this.deletedSmartItemsUnsub = this.smartItemService.listenForDeletedSmartItem()
+      .subscribe(id => {
         const state = ctx.getState();
         let smartItems = [...state.smartItems];
-        smartItems = smartItems.filter((s) => s.id !== smartItem.id);
+        smartItems = smartItems.filter((s) => s.id !== id);
         ctx.dispatch(new UpdateSmartItems(smartItems));
       });
   }
 
-  @Action(EditSmartItem)
-  editSmartItem(editDTO: EditSmartItemDto): void {
-    this.smartItemService.editSmartItem(editDTO);
+  @Action(StopListeningForDeletedSmartItem)
+  stopListeningForDeletedSmartItem(): void {
+    if (this.deletedSmartItemsUnsub) {
+      this.deletedSmartItemsUnsub.unsubscribe();
+    }
   }
 
-  @Action(ListenForEditSmartItem)
+  @Action(EditSmartItem)
+  editSmartItem(ctx: StateContext<SmartItemStateModel>, action: EditSmartItem): void {
+    this.smartItemService.editSmartItem(action.editDto);
+  }
+
+  @Action(ListenForEditedSmartItem)
   listenForEditedSmartItem(ctx: StateContext<SmartItemStateModel>): void {
-    this.smartItemsUnsub = this.smartItemService.listenForEditSmartItem()
+    this.editedSmartItemsUnsub = this.smartItemService.listenForEditedSmartItem()
       .subscribe(smartItem => {
         const state = ctx.getState();
         const smartItems = [...state.smartItems];
@@ -96,4 +117,56 @@ export class SmartItemState {
         ctx.dispatch(new UpdateSmartItems(smartItems));
       });
   }
+
+  @Action(StopListeningForEditedSmartItem)
+  stopListeningForEditedSmartItem(): void {
+    if (this.editedSmartItemsUnsub) {
+      this.editedSmartItemsUnsub.unsubscribe();
+    }
+  }
+
+  @Action(CreateSmartItem)
+  createSmartItem(ctx: StateContext<SmartItemStateModel>, action: CreateSmartItem): void {
+    this.smartItemService.createSmartItem(action.createDto);
+  }
+
+  @Action(ListenForNewSmartItem)
+  listenForNewSmartItem(ctx: StateContext<SmartItemStateModel>): void {
+    this.createdSmartItemsUnsub = this.smartItemService.listenForCreatedSmartItem()
+      .subscribe(smartItem => {
+        const state = ctx.getState();
+        const smartItems = [...state.smartItems];
+        smartItems.push(smartItem);
+        ctx.dispatch(new UpdateSmartItems(smartItems));
+      });
+  }
+
+  @Action(StopListeningForNewSmartItem)
+  stopListeningForNewSmartItem(): void {
+    if (this.createdSmartItemsUnsub) {
+      this.createdSmartItemsUnsub.unsubscribe();
+    }
+  }
+
+  @Action(ToggleSmartItem)
+  toggleSmartItem(ctx: StateContext<SmartItemStateModel>, action: ToggleSmartItem): void {
+    this.smartItemService.toggleSmartItem(action.toggleDto);
+  }
+
+  @Action(ListenForToggledSmartItem)
+  listenForToggledSmartItem(ctx: StateContext<SmartItemStateModel>): void {
+    this.toggledSmartItemsUnsub = this.smartItemService.listenForToggledSmartItem()
+      .subscribe(() => {
+        // add stuff here
+      });
+  }
+
+  @Action(StopListeningForToggledSmartItem)
+  stopListeningForToggledSmartItem(): void {
+    if (this.toggledSmartItemsUnsub) {
+      this.toggledSmartItemsUnsub.unsubscribe();
+    }
+  }
+
+
 }

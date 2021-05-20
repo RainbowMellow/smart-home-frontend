@@ -1,17 +1,17 @@
-import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {SmartItem} from '../../shared/models/smartItem.model';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {Category} from '../../shared/models/category.model';
-import {EditSmartItemDto} from './dtos/editSmartItem.dto';
+import {EditSmartItemDto} from '../../shared/dtos/editSmartItem.dto';
 import {Store} from '@ngxs/store';
-import {DeleteSmartItem, EditSmartItem, ListenForDeletedSmartItem, ListenForEditSmartItem} from '../../shared/state/smartItem.actions';
+import {DeleteSmartItem, EditSmartItem, ListenForDeletedSmartItem, ListenForEditedSmartItem} from '../../shared/state/smartItem.actions';
 
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss']
 })
-export class DetailComponent implements OnInit {
+export class DetailComponent implements OnInit, OnChanges {
   smartItemForm: FormGroup;
   categories = [
     { id: 1, name: 'Mock Category 1' },
@@ -52,6 +52,6 @@ export class DetailComponent implements OnInit {
 
   deleteSmartItem(): void {
     // this.store.dispatch(new ListenForDeletedSmartItem());
-    this.store.dispatch(new DeleteSmartItem(this.smartItem));
+    this.store.dispatch(new DeleteSmartItem(this.smartItem.id));
   }
 }
