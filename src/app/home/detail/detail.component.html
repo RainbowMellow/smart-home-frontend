@@ -31,7 +31,7 @@
           <label for="category" class="col-sm-3 col-form-label">Category</label>
           <div class="col-sm-9 form-inline">
             <select formControlName="category" id="category" class="form-control">
-              <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+              <option *ngFor="let category of categories$ | async" [value]="category.id">{{category.name}}</option>
             </select>
             <span class="validity"></span>
           </div>

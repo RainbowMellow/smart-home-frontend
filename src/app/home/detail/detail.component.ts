@@ -3,7 +3,7 @@ import {SmartItem} from '../../shared/models/smartItem.model';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {Category} from '../../shared/models/category.model';
 import {EditSmartItemDto} from '../../shared/dtos/editSmartItem.dto';
-import {Store} from '@ngxs/store';
+import {Select, Store} from '@ngxs/store';
 import {
   DeleteSmartItem,
   EditSmartItem,
@@ -16,6 +16,9 @@ import {
   ToggleSmartItem
 } from '../../shared/state/smartItem.actions';
 import {ToggleDto} from '../../shared/dtos/toggle.dto';
+import {CategoryState} from '../../shared/state/category.state';
+import {Observable} from 'rxjs';
+import {ListenForAllCategories, RequestAllCategories, StopListeningForAllCategories} from '../../shared/state/category.actions';
 
 @Component({
   selector: 'app-detail',
@@ -24,18 +27,22 @@ import {ToggleDto} from '../../shared/dtos/toggle.dto';
 })
 export class DetailComponent implements OnInit, OnChanges, OnDestroy {
   smartItemForm: FormGroup;
-  categories = [
+  categories = [ // need to fill this with categories$
     { id: 1, name: 'Mock Category 1' },
     { id: 2, name: 'Mock Category 2' },
     { id: 3, name: 'Mock Category 3' },
   ];
 
   @Input() smartItem?: SmartItem;
+  @Select(CategoryState.categories)
+  categories$: Observable<Category[]> | undefined;
 
   constructor(private fb: FormBuilder, private store: Store) { }
 
   ngOnInit(): void {
     this.store.dispatch([
+      new ListenForAllCategories(),
+      new RequestAllCategories(),
       new ListenForDeletedSmartItem(), // should maybe only be in home.component.ts?
       new ListenForEditedSmartItem(),
       new ListenForToggledSmartItem()
@@ -60,7 +67,8 @@ export class DetailComponent implements OnInit, OnChanges, OnDestroy {
     this.store.dispatch([
       new StopListeningForDeletedSmartItem(),
       new StopListeningForEditedSmartItem(),
-      new StopListeningForToggledSmartItem()
+      new StopListeningForToggledSmartItem(),
+      new StopListeningForAllCategories()
     ]);
   }
 
