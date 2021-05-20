@@ -3,12 +3,21 @@ import {SmartItemState} from '../shared/state/smartItem.state';
 import {Observable} from 'rxjs';
 import {SmartItem} from '../shared/models/smartItem.model';
 import {Select, Store} from '@ngxs/store';
-import {ListenForSmartItems, RequestSmartItems} from '../shared/state/smartItem.actions';
+import {
+  ListenForAllSmartItems,
+  ListenForDeletedSmartItem,
+  ListenForEditedSmartItem,
+  ListenForNewSmartItem,
+  ListenForToggledSmartItem,
+  RequestSmartItems,
+  StopListeningForAllSmartItems,
+  StopListeningForDeletedSmartItem,
+  StopListeningForEditedSmartItem,
+  StopListeningForNewSmartItem, StopListeningForToggledSmartItem
+} from '../shared/state/smartItem.actions';
 import {SmartItemService} from '../shared/services/smart-item.service';
-import {Category} from '../shared/models/category.model';
 import {UserState} from '../shared/state/user.state';
 import {User} from '../shared/models/user.model';
-import {ExitApplication} from '../shared/state/user.actions';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +36,14 @@ export class HomeComponent implements OnInit, OnDestroy {
               private service: SmartItemService) { }
 
   ngOnInit(): void {
-    this.store.dispatch([new ListenForSmartItems(), new RequestSmartItems()]);
+    this.store.dispatch([
+      new ListenForAllSmartItems(),
+      new RequestSmartItems(),
+      new ListenForNewSmartItem(),
+      new ListenForDeletedSmartItem(),
+      new ListenForEditedSmartItem(),
+      new ListenForToggledSmartItem()
+    ]);
 /*
     const cate: Category = {
       name: 'Lamp'
@@ -51,6 +67,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // this.store.dispatch(new ExitApplication()); // doesn't work
+    this.store.dispatch([
+      new StopListeningForAllSmartItems(),
+      new StopListeningForNewSmartItem(),
+      new StopListeningForDeletedSmartItem(),
+      new StopListeningForEditedSmartItem(),
+      new StopListeningForToggledSmartItem()
+    ]);
   }
 
   toggle(): void {

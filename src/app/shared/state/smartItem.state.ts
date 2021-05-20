@@ -19,9 +19,9 @@ import {
   ToggleSmartItem,
   UpdateSmartItems
 } from './smartItem.actions';
-import {EditSmartItemDto} from '../dtos/editSmartItem.dto';
-import {CreateSmartItemDto} from '../dtos/createSmartItem.dto';
-import {ToggleDto} from '../dtos/toggle.dto';
+import {patch, updateItem} from '@ngxs/store/operators';
+import {LogService} from '../services/log.service';
+import {UserStateModel} from './user.state';
 
 export interface SmartItemStateModel {
   smartItems: SmartItem[];
@@ -40,7 +40,8 @@ export class SmartItemState {
   private editedSmartItemsUnsub: Subscription | undefined;
   private createdSmartItemsUnsub: Subscription | undefined;
   private toggledSmartItemsUnsub: Subscription | undefined;
-  constructor(private smartItemService: SmartItemService) {
+  constructor(private smartItemService: SmartItemService,
+              private logService: LogService) {
   }
 
   @Selector()
@@ -84,13 +85,19 @@ export class SmartItemState {
   }
 
   @Action(ListenForDeletedSmartItem)
-  listenForDeletedSmartItem(ctx: StateContext<SmartItemStateModel>): void {
+  listenForDeletedSmartItem(ctx: StateContext<SmartItemStateModel>, uctx: StateContext<UserStateModel>): void {
     this.deletedSmartItemsUnsub = this.smartItemService.listenForDeletedSmartItem()
       .subscribe(id => {
         const state = ctx.getState();
         let smartItems = [...state.smartItems];
+        const deletedItem = smartItems.find(item => item.id === id);
         smartItems = smartItems.filter((s) => s.id !== id);
         ctx.dispatch(new UpdateSmartItems(smartItems));
+        this.logService.triggerLogMessage({
+          userString: uctx.getState().loggedInUser.name,
+          message: `${deletedItem.name} was removed`,
+          timeStamp: new Date()
+        });
       });
   }
 
@@ -107,7 +114,7 @@ export class SmartItemState {
   }
 
   @Action(ListenForEditedSmartItem)
-  listenForEditedSmartItem(ctx: StateContext<SmartItemStateModel>): void {
+  listenForEditedSmartItem(ctx: StateContext<SmartItemStateModel>, uctx: StateContext<UserStateModel>): void {
     this.editedSmartItemsUnsub = this.smartItemService.listenForEditedSmartItem()
       .subscribe(smartItem => {
         const state = ctx.getState();
@@ -115,6 +122,12 @@ export class SmartItemState {
         const index = smartItems.findIndex((s) => s.id === smartItem.id);
         smartItems[index] = smartItem;
         ctx.dispatch(new UpdateSmartItems(smartItems));
+        this.logService.triggerLogMessage({
+          userString: uctx.getState().loggedInUser.name,
+          message: `${smartItem.name} was updated`, // maybe add more detailed description here
+          item: smartItem,
+          timeStamp: new Date()
+        });
       });
   }
 
@@ -131,13 +144,19 @@ export class SmartItemState {
   }
 
   @Action(ListenForNewSmartItem)
-  listenForNewSmartItem(ctx: StateContext<SmartItemStateModel>): void {
+  listenForNewSmartItem(ctx: StateContext<SmartItemStateModel>, uctx: StateContext<UserStateModel>): void {
     this.createdSmartItemsUnsub = this.smartItemService.listenForCreatedSmartItem()
       .subscribe(smartItem => {
         const state = ctx.getState();
         const smartItems = [...state.smartItems];
         smartItems.push(smartItem);
         ctx.dispatch(new UpdateSmartItems(smartItems));
+        this.logService.triggerLogMessage({
+          userString: uctx.getState().loggedInUser.name,
+          message: `${smartItem.name} was created`,
+          item: smartItem,
+          timeStamp: new Date()
+        });
       });
   }
 
@@ -154,10 +173,23 @@ export class SmartItemState {
   }
 
   @Action(ListenForToggledSmartItem)
-  listenForToggledSmartItem(ctx: StateContext<SmartItemStateModel>): void {
+  listenForToggledSmartItem(ctx: StateContext<SmartItemStateModel>, uctx: StateContext<UserStateModel>): void {
     this.toggledSmartItemsUnsub = this.smartItemService.listenForToggledSmartItem()
-      .subscribe(() => {
-        // add stuff here
+      .subscribe(toggleDto => {
+        ctx.setState(
+          patch({
+            smartItems: updateItem<SmartItem>(item => item.id === toggleDto.id,
+              patch({ on: toggleDto.on}))
+          })
+        );
+        const smartItem = ctx.getState().smartItems.find(item => item.id === toggleDto.id);
+        const on = (toggleDto.on) ? 'on' : 'off';
+        this.logService.triggerLogMessage({
+          userString: uctx.getState().loggedInUser.name,
+          message: `${smartItem.name} was turned ${on}`,
+          item: smartItem,
+          timeStamp: new Date()
+        });
       });
   }
 

@@ -10,11 +10,11 @@
         <div class="row justify-content-center mb-3">
           Off
           <div *ngIf="smartItem.on" class="custom-control custom-switch" style="margin-left: 7px">
-            <input type="checkbox" class="custom-control-input" id="customSwitches1" checked>
+            <input type="checkbox" class="custom-control-input" id="customSwitches1" checked (click)="toggleSmartItem(false)">
             <label class="custom-control-label" for="customSwitches1">On</label>
           </div>
           <div *ngIf="!smartItem.on" class="custom-control custom-switch" style="margin-left: 7px">
-            <input type="checkbox" class="custom-control-input" id="customSwitches2">
+            <input type="checkbox" class="custom-control-input" id="customSwitches2" (click)="toggleSmartItem(true)">
             <label class="custom-control-label" for="customSwitches2">On</label>
           </div>
         </div>
