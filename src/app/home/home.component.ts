@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch(new ExitApplication());
+    // this.store.dispatch(new ExitApplication()); // doesn't work
   }
 
   toggle(): void {

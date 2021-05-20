@@ -105,7 +105,7 @@ export class UserState {
   @Action(ExitApplication) // doesn't seem to work when called from ngOnDestroy?
   exitApplication(ctx: StateContext<UserStateModel>): void {
       const msg: LogMessage = {
-        userString: 'none', // use loggedInUser later
+        userString: 'none', // use loggedInUser later, and add call to backend to logout user
         message: 'User has exited application',
         timeStamp: new Date()};
       this.logService.triggerLogMessage(msg);
