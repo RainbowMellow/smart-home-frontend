@@ -1,4 +1,7 @@
-<div *ngIf="loggedInUser$ | async as user">{{user.name}}</div>
+<div *ngIf="loggedInUser$ | async as user">
+  <span>You are logged in as {{user.name}} </span>
+<button (click)="requestLogout()">Logout</button>
+</div>
 <div class="row align-items-center justify-content-center vh-100" *ngIf="!(loggedInUser$ | async)">
   <div class="card">
     <div class="card-body">

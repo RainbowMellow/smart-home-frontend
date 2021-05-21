@@ -7,7 +7,7 @@ import {
   ListenForAllLogMessages,
   ListenForNewLogMessage, RequestAllLogMessages,
   StopListeningForAllLogMessages,
-  StopListeningForNewLogMessage,
+  StopListeningForNewLogMessage, TriggerNewLogMessage,
   UpdateLogMessages
 } from './log.actions';
 
@@ -60,6 +60,12 @@ export class LogMessageState {
       });
   }
 
+  @Action(TriggerNewLogMessage)
+  TriggerNewLogMessage(ctx: StateContext<LogMessageStateModel>, action: TriggerNewLogMessage): void {
+    const message = action.message;
+    this.logService.triggerLogMessage(message);
+  }
+
   @Action(UpdateLogMessages)
   UpdateLogMessages(ctx: StateContext<LogMessageStateModel>, action: UpdateLogMessages): void {
     const state = ctx.getState();
@@ -79,8 +85,8 @@ export class LogMessageState {
 
   @Action(StopListeningForNewLogMessage)
   StopListeningForNewLogMessage(): void {
-    if (this.allLogMessagesUnsub) {
-      this.allLogMessagesUnsub.unsubscribe();
+    if (this.newLogMessageUnsub) {
+      this.newLogMessageUnsub.unsubscribe();
     }
   }
 

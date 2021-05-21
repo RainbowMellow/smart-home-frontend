@@ -10,11 +10,11 @@
         <div class="row justify-content-center mb-3">
           Off
           <div *ngIf="smartItem.on" class="custom-control custom-switch" style="margin-left: 7px">
-            <input type="checkbox" class="custom-control-input" id="customSwitches1" checked>
+            <input type="checkbox" class="custom-control-input" id="customSwitches1" checked (click)="toggleSmartItem(false)">
             <label class="custom-control-label" for="customSwitches1">On</label>
           </div>
           <div *ngIf="!smartItem.on" class="custom-control custom-switch" style="margin-left: 7px">
-            <input type="checkbox" class="custom-control-input" id="customSwitches2">
+            <input type="checkbox" class="custom-control-input" id="customSwitches2" (click)="toggleSmartItem(true)">
             <label class="custom-control-label" for="customSwitches2">On</label>
           </div>
         </div>
@@ -31,7 +31,7 @@
           <label for="category" class="col-sm-3 col-form-label">Category</label>
           <div class="col-sm-9 form-inline">
             <select formControlName="category" id="category" class="form-control">
-              <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+              <option *ngFor="let category of categories$ | async" [value]="category.id">{{category.name}}</option>
             </select>
             <span class="validity"></span>
           </div>

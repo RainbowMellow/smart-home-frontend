@@ -3,8 +3,19 @@ import {Select, Store} from '@ngxs/store';
 import {UserState} from '../../shared/state/user.state';
 import {Observable} from 'rxjs';
 import {User} from '../../shared/models/user.model';
-import {ListenForLogin, RequestLogin, StopListeningForLogin} from '../../shared/state/user.actions';
+import {
+  ExitApplication,
+  ListenForLogin,
+  ListenForLogout,
+  RequestLogin,
+  RequestLogout,
+  StopListeningForLogin,
+  StopListeningForLogout
+} from '../../shared/state/user.actions';
 import {FormControl} from '@angular/forms';
+import {isNewLine} from '@angular/compiler/src/chars';
+import {LogMessage} from '../../shared/models/log-message.model';
+import {TriggerNewLogMessage} from '../../shared/state/log.actions';
 
 @Component({
   selector: 'app-user',
@@ -20,11 +31,11 @@ export class UserComponent implements OnInit, OnDestroy {
   constructor(private store: Store) { }
 
   ngOnInit(): void {
-    this.store.dispatch(new ListenForLogin());
+    this.store.dispatch([new ListenForLogin(), new ListenForLogout()]);
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch(new StopListeningForLogin());
+    this.store.dispatch([new StopListeningForLogin(), new StopListeningForLogout()]);
   }
 
   requestLogin(): void {
@@ -32,5 +43,9 @@ export class UserComponent implements OnInit, OnDestroy {
       const user: User = { name: this.nameFormControl.value };
       this.store.dispatch(new RequestLogin(user));
     }
+  }
+
+  requestLogout(): void {
+    this.store.dispatch(new RequestLogout());
   }
 }

@@ -1,5 +1,6 @@
 <app-user></app-user>
 
+<div *ngIf="loggedInUser$ | async">
 <div *ngIf="smartItems$ | async as smartItems">
   <h1>Floorplan</h1>
   <h2>Ground floor</h2>
@@ -48,3 +49,5 @@
 <div *ngIf="!smartItems$">
   No Smart Items created yet..
 </div>
+</div>
+

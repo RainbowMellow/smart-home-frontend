@@ -1,4 +1,4 @@
-import {Category} from '../../../shared/models/category.model';
+import {Category} from '../models/category.model';
 
 export interface EditSmartItemDto {
   id: number;
