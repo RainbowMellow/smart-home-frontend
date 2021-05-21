@@ -5,7 +5,7 @@ import {SmartItem} from '../shared/models/smartItem.model';
 import {Select, Store} from '@ngxs/store';
 import {ListenForSmartItems, RequestSmartItems} from '../shared/state/smartItem.actions';
 import {SmartItemService} from '../shared/services/smart-item.service';
-import {Category} from '../shared/models/category.model';
+import {UpdateSelectedSmartItem} from '../shared/state/selectedSmartItem.action';
 
 @Component({
   selector: 'app-home',
@@ -16,13 +16,16 @@ export class HomeComponent implements OnInit {
 
   @Select(SmartItemState.smartItems)
   smartItems$: Observable<SmartItem[]> | undefined;
-  selectedSmartItem?: SmartItem;
 
   constructor(private store: Store,
               private service: SmartItemService) { }
 
   ngOnInit(): void {
-    this.store.dispatch([new ListenForSmartItems(), new RequestSmartItems()]);
+    this.store.dispatch([
+      new ListenForSmartItems(),
+      new RequestSmartItems(),
+    ]);
+
 /*
     const cate: Category = {
       name: 'Lamp'
@@ -40,9 +43,11 @@ export class HomeComponent implements OnInit {
   }
 
   onSelect(smartItem: SmartItem): void {
-    // smartItem.on = !smartItem.on;
-    this.selectedSmartItem = smartItem;
-    console.log('smartItem name: ' + smartItem.name);
+    // smartItem.on = !smartItem.on; // old
+    // this.selectedSmartItem = smartItem; // old
+    console.log('smartItem selected: ' + smartItem.name);
+
+    this.store.dispatch(new UpdateSelectedSmartItem(smartItem));
   }
 
   toggle(): void {

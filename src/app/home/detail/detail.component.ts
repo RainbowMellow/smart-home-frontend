@@ -1,10 +1,10 @@
 import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
 import {SmartItem} from '../../shared/models/smartItem.model';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {Category} from '../../shared/models/category.model';
-import {EditSmartItemDto} from './dtos/editSmartItem.dto';
-import {Store} from '@ngxs/store';
-import {DeleteSmartItem, EditSmartItem, ListenForDeletedSmartItem, ListenForEditSmartItem} from '../../shared/state/smartItem.actions';
+import {Select, Store} from '@ngxs/store';
+import {SelectedSmartItemState} from '../../shared/state/selectedSmartItem.state';
+import {Observable} from 'rxjs';
+import {ListenForSelectedSmartItem} from '../../shared/state/selectedSmartItem.action';
 
 @Component({
   selector: 'app-detail',
@@ -12,6 +12,9 @@ import {DeleteSmartItem, EditSmartItem, ListenForDeletedSmartItem, ListenForEdit
   styleUrls: ['./detail.component.scss']
 })
 export class DetailComponent implements OnInit {
+  @Select(SelectedSmartItemState.selectedSmartItem)
+  selectedSmartItem$: Observable<SmartItem> | undefined;
+
   smartItemForm: FormGroup;
   categories = [
     { id: 1, name: 'Mock Category 1' },
@@ -19,25 +22,21 @@ export class DetailComponent implements OnInit {
     { id: 3, name: 'Mock Category 3' },
   ];
 
-  @Input() smartItem?: SmartItem;
-
   constructor(private fb: FormBuilder, private store: Store) { }
 
   ngOnInit(): void {
     this.smartItemForm = this.fb.group({
       name: [''],
-      category: this.fb.group({
-        id: [''],
-        name: ['']
-      }),
       xPos: [''],
       yPos: [''],
-      on: ['']
     });
-  }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.smartItemForm.patchValue(changes.smartItem.currentValue);
+    this.store.dispatch(new ListenForSelectedSmartItem());
+
+    this.selectedSmartItem$.subscribe((smartItem) => {
+      console.log('form updated!!');
+      this.smartItemForm.patchValue(smartItem);
+    });
   }
 
   updateSmartItem(): void {
@@ -47,11 +46,10 @@ export class DetailComponent implements OnInit {
     // this.store.dispatch(new ListenForEditSmartItem());
     // this.store.dispatch(new EditSmartItem(editDto));
     // console.warn(this.smartItemForm.value);
-    this.smartItemForm.patchValue(this.smartItem);
   }
 
   deleteSmartItem(): void {
     // this.store.dispatch(new ListenForDeletedSmartItem());
-    this.store.dispatch(new DeleteSmartItem(this.smartItem));
+    // this.store.dispatch(new DeleteSmartItem(this.smartItem));
   }
 }
