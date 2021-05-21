@@ -12,6 +12,7 @@ import { UserState } from '../shared/state/user.state';
 import { DetailComponent } from './detail/detail.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {CategoryState} from '../shared/state/category.state';
+import { SelectedSmartItemState } from '../shared/state/selectedSmartItem.state';
 
 @NgModule({
   declarations: [HomeComponent, LogComponent, UserComponent, DetailComponent],
@@ -19,7 +20,7 @@ import {CategoryState} from '../shared/state/category.state';
     CommonModule,
     HomeRoutingModule,
     ReactiveFormsModule,
-    NgxsModule.forFeature([SmartItemState, LogMessageState, UserState, CategoryState]),
+    NgxsModule.forFeature([SmartItemState, LogMessageState, UserState, CategoryState, SelectedSmartItemState]),
     NgbModule
   ]
 })

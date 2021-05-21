@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {SmartItem} from '../../shared/models/smartItem.model';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {Category} from '../../shared/models/category.model';
 import {EditSmartItemDto} from '../../shared/dtos/editSmartItem.dto';
 import {Select, Store} from '@ngxs/store';
@@ -19,73 +19,64 @@ import {ToggleDto} from '../../shared/dtos/toggle.dto';
 import {CategoryState} from '../../shared/state/category.state';
 import {Observable} from 'rxjs';
 import {ListenForAllCategories, RequestAllCategories, StopListeningForAllCategories} from '../../shared/state/category.actions';
+import {SelectedSmartItemState} from '../../shared/state/selectedSmartItem.state';
+import {ListenForSelectedSmartItem} from '../../shared/state/selectedSmartItem.action';
 
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss']
 })
-export class DetailComponent implements OnInit, OnChanges, OnDestroy {
-  smartItemForm: FormGroup;
+export class DetailComponent implements OnInit, OnDestroy {
+  @Select(SelectedSmartItemState.selectedSmartItem)
+  selectedSmartItem$: Observable<SmartItem> | undefined;
+  selectedSmartItemId: number;
 
-  @Input() smartItem?: SmartItem;
   @Select(CategoryState.categories)
   categories$: Observable<Category[]> | undefined;
+
+  smartItemForm: FormGroup;
 
   constructor(private fb: FormBuilder, private store: Store) { }
 
   ngOnInit(): void {
     this.store.dispatch([
       new ListenForAllCategories(),
-      new RequestAllCategories(),
-      new ListenForDeletedSmartItem(), // should maybe only be in home.component.ts?
-      new ListenForEditedSmartItem(),
-      new ListenForToggledSmartItem()
+      new RequestAllCategories()
     ]);
     this.smartItemForm = this.fb.group({
       name: [''],
-      category: this.fb.group({
-        id: [''],
-        name: ['']
-      }),
+      // category: [''],
       xPos: [''],
-      yPos: [''],
-      on: ['']
+      yPos: ['']
+    });
+
+    this.selectedSmartItem$.subscribe((smartItem) => {
+      console.log('form updated!!');
+      this.selectedSmartItemId = smartItem.id;
+      this.smartItemForm.patchValue(smartItem);
     });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.smartItemForm.patchValue(changes.smartItem.currentValue);
-  }
-
   ngOnDestroy(): void {
-    this.store.dispatch([
-      new StopListeningForDeletedSmartItem(),
-      new StopListeningForEditedSmartItem(),
-      new StopListeningForToggledSmartItem(),
-      new StopListeningForAllCategories()
-    ]);
+    this.store.dispatch(new StopListeningForAllCategories());
   }
 
   updateSmartItem(): void {
-    // const editDto: EditSmartItemDto = this.smartItemForm.value;
-    // editDto.id = this.smartItem.id;
-
-    // this.store.dispatch(new ListenForEditSmartItem());
-    // this.store.dispatch(new EditSmartItem(editDto));
-    // console.warn(this.smartItemForm.value);
-    this.smartItemForm.patchValue(this.smartItem); // ???
-    const editDto: EditSmartItemDto = JSON.parse(JSON.stringify(this.smartItem));
+    const editDto: EditSmartItemDto = this.smartItemForm.value;
+    editDto.id = this.selectedSmartItemId;
     this.store.dispatch(new EditSmartItem(editDto));
   }
 
   deleteSmartItem(): void {
-    this.store.dispatch(new DeleteSmartItem(this.smartItem.id));
+    this.store.dispatch(new DeleteSmartItem(this.selectedSmartItemId));
   }
 
   toggleSmartItem(on: boolean): void {
-    const toggleDto: ToggleDto = { id: this.smartItem.id, on};
+    const toggleDto: ToggleDto = {
+      id: this.selectedSmartItemId,
+      on: !on
+    };
     this.store.dispatch(new ToggleSmartItem(toggleDto));
   }
-
 }

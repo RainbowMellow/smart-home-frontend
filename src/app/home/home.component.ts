@@ -15,9 +15,9 @@ import {
   StopListeningForEditedSmartItem,
   StopListeningForNewSmartItem, StopListeningForToggledSmartItem
 } from '../shared/state/smartItem.actions';
-import {SmartItemService} from '../shared/services/smart-item.service';
 import {UserState} from '../shared/state/user.state';
 import {User} from '../shared/models/user.model';
+import {ListenForSelectedSmartItem, UpdateSelectedSmartItem} from '../shared/state/selectedSmartItem.action';
 
 @Component({
   selector: 'app-home',
@@ -28,12 +28,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   @Select(SmartItemState.smartItems)
   smartItems$: Observable<SmartItem[]> | undefined;
+
   @Select(UserState.loggedInUser)
   loggedInUser$: Observable<User> | undefined;
-  selectedSmartItem?: SmartItem;
 
-  constructor(private store: Store,
-              private service: SmartItemService) { }
+  constructor(private store: Store) { }
 
   ngOnInit(): void {
     this.store.dispatch([
@@ -42,50 +41,24 @@ export class HomeComponent implements OnInit, OnDestroy {
       new ListenForNewSmartItem(),
       new ListenForDeletedSmartItem(),
       new ListenForEditedSmartItem(),
-      new ListenForToggledSmartItem()
-    ]);
-/*
-    const cate: Category = {
-      name: 'Lamp'
-    };
-
-    this.selectedSmartItem = {
-      name: 'Lamp',
-      category: cate,
-      xPos: 2,
-      yPos: 1,
-      on: true
-    };
-    */
-
+      new ListenForToggledSmartItem(),
+      new ListenForSelectedSmartItem()
+  ]);
   }
 
   onSelect(smartItem: SmartItem): void {
-    // smartItem.on = !smartItem.on;
-    this.selectedSmartItem = smartItem;
+    console.log('smartItem selected: ' + smartItem.name);
+    this.store.dispatch(new UpdateSelectedSmartItem(smartItem));
   }
 
   ngOnDestroy(): void {
-    // this.store.dispatch(new ExitApplication()); // doesn't work
     this.store.dispatch([
       new StopListeningForAllSmartItems(),
       new StopListeningForNewSmartItem(),
       new StopListeningForDeletedSmartItem(),
       new StopListeningForEditedSmartItem(),
       new StopListeningForToggledSmartItem()
+      // stop ListenForSelectedSmartItem
     ]);
-  }
-
-  toggle(): void {
-    // tell backend (state) to toggle
-    // by using selectedItem id and on bool to create toggleDto?
-    /*
-    const toggleSmartItemDto: updateSmartItemDto = {
-      id: this.stock.id,
-      on: !smartItem.on
-    };
-
-    this.smartItemService.update(SmartItemUpdateDto);
-    */
   }
 }
