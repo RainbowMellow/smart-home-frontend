@@ -27,11 +27,6 @@ import {ListenForAllCategories, RequestAllCategories, StopListeningForAllCategor
 })
 export class DetailComponent implements OnInit, OnChanges, OnDestroy {
   smartItemForm: FormGroup;
-  categories = [ // need to fill this with categories$
-    { id: 1, name: 'Mock Category 1' },
-    { id: 2, name: 'Mock Category 2' },
-    { id: 3, name: 'Mock Category 3' },
-  ];
 
   @Input() smartItem?: SmartItem;
   @Select(CategoryState.categories)
