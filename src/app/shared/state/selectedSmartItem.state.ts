@@ -4,11 +4,9 @@ import {
   ListenForSelectedSmartItem,
   UpdateSelectedSmartItemState,
   UpdateSelectedSmartItem,
-  StopListeningForSelectedSmartItem
 } from './selectedSmartItem.action';
 import {SmartItem} from '../models/smartItem.model';
 import {BehaviorSubject} from 'rxjs';
-import {UserStateModel} from './user.state';
 
 export interface SelectedSmartItemStateModel {
   selectedSmartItem: SmartItem;
@@ -25,7 +23,7 @@ export class SelectedSmartItemState {
   private selectedSmartItem: BehaviorSubject<SmartItem>;
 
   constructor() {
-    this.selectedSmartItem = new BehaviorSubject<SmartItem>(undefined);
+    this.selectedSmartItem = new BehaviorSubject<SmartItem>(null);
   }
 
   @Selector()
@@ -35,8 +33,6 @@ export class SelectedSmartItemState {
 
   @Action(ListenForSelectedSmartItem)
   ListenForSelectedSmartItem(ctx: StateContext<SelectedSmartItemStateModel>): void {
-    console.log('started listening for selected smartitem');
-
     this.selectedSmartItem.asObservable()
       .subscribe(selectedSmartItem =>  {
         ctx.dispatch(new UpdateSelectedSmartItemState(selectedSmartItem));
@@ -45,7 +41,6 @@ export class SelectedSmartItemState {
 
   @Action(UpdateSelectedSmartItem)
   UpdateSelectedSmartItem(ctx: StateContext<SelectedSmartItemStateModel>, action: UpdateSelectedSmartItem): void {
-    console.log('setSelectedSmartItem was called');
     this.selectedSmartItem.next(action.smartItem);
   }
 

@@ -187,7 +187,8 @@ export class SmartItemState {
         const smartItem = ctx.getState().smartItems.find(item => item.id === toggleDto.id);
         const on = (toggleDto.on) ? 'on' : 'off';
         this.logService.triggerLogMessage({
-          userString: uctx.getState().loggedInUser.name,
+          // userString: uctx.getState().loggedInUser.name,
+          userString: 'tralala',
           message: `${smartItem.name} was turned ${on}`,
           item: smartItem,
           timeStamp: new Date()
