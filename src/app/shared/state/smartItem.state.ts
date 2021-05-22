@@ -170,10 +170,12 @@ export class SmartItemState {
   @Action(ToggleSmartItem)
   toggleSmartItem(ctx: StateContext<SmartItemStateModel>, action: ToggleSmartItem): void {
     this.smartItemService.toggleSmartItem(action.toggleDto);
+    console.log('state toggle smartItem called');
   }
 
   @Action(ListenForToggledSmartItem)
   listenForToggledSmartItem(ctx: StateContext<SmartItemStateModel>, uctx: StateContext<UserStateModel>): void {
+    console.log('state listen for toggle smartItem was called');
     this.toggledSmartItemsUnsub = this.smartItemService.listenForToggledSmartItem()
       .subscribe(toggleDto => {
         ctx.setState(

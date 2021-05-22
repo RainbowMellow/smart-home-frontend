@@ -42,7 +42,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       new ListenForDeletedSmartItem(),
       new ListenForEditedSmartItem(),
       new ListenForToggledSmartItem(),
-      new ListenForSelectedSmartItem()
   ]);
   }
 
@@ -58,7 +57,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       new StopListeningForDeletedSmartItem(),
       new StopListeningForEditedSmartItem(),
       new StopListeningForToggledSmartItem()
-      // stop ListenForSelectedSmartItem
     ]);
   }
 }

@@ -42,24 +42,35 @@ export class DetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.dispatch([
       new ListenForAllCategories(),
-      new RequestAllCategories()
+      new RequestAllCategories(),
+      new ListenForSelectedSmartItem()
     ]);
+
     this.smartItemForm = this.fb.group({
       name: [''],
-      // category: [''],
+      category: {
+        id: [''],
+        name: ['']
+      },
       xPos: [''],
-      yPos: ['']
+      yPos: [''],
+      on: ['']
     });
 
     this.selectedSmartItem$.subscribe((smartItem) => {
-      console.log('form updated!!');
-      this.selectedSmartItemId = smartItem.id;
-      this.smartItemForm.patchValue(smartItem);
+      if (smartItem) {
+        this.selectedSmartItemId = smartItem.id;
+        this.smartItemForm.patchValue(smartItem);
+        this.smartItemForm.get('category').patchValue(smartItem.category.id);
+      }
     });
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch(new StopListeningForAllCategories());
+    this.store.dispatch(
+      new StopListeningForAllCategories(),
+      // stop ListenForSelectedSmartItem
+    );
   }
 
   updateSmartItem(): void {
@@ -72,10 +83,10 @@ export class DetailComponent implements OnInit, OnDestroy {
     this.store.dispatch(new DeleteSmartItem(this.selectedSmartItemId));
   }
 
-  toggleSmartItem(on: boolean): void {
+  toggleSmartItem(): void {
     const toggleDto: ToggleDto = {
       id: this.selectedSmartItemId,
-      on: !on
+      on: !this.smartItemForm.value.on
     };
     this.store.dispatch(new ToggleSmartItem(toggleDto));
   }

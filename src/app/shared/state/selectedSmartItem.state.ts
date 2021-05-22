@@ -25,7 +25,7 @@ export class SelectedSmartItemState {
   private selectedSmartItem: BehaviorSubject<SmartItem>;
 
   constructor() {
-    this.selectedSmartItem = new BehaviorSubject<SmartItem>(null);
+    this.selectedSmartItem = new BehaviorSubject<SmartItem>(undefined);
   }
 
   @Selector()
@@ -53,6 +53,7 @@ export class SelectedSmartItemState {
   UpdateSelectedSmartItemState(ctx: StateContext<SelectedSmartItemStateModel>, action: UpdateSelectedSmartItemState): void {
     const state = ctx.getState();
     const newState: SelectedSmartItemStateModel = {
+      ...state,
       selectedSmartItem: action.smartItem
     };
     ctx.setState(newState);
