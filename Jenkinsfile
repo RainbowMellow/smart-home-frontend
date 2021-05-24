@@ -5,39 +5,31 @@ pipeline {
 		pollSCM 'H/3 * * * *'
 	}
     stages {
-		stage('Build frontend and backend in parallel') {
+		stage('Pull frontend and backend from github repos and put into their respective folders') {
+			dir('frontend') {
+				git branch: 'DevOps',
+				url: 'https://github.com/RainbowMellow/smart-home-frontend/'
+			}
+			dir('backend') {
+				git branch: 'DevOps',
+				url: 'https://github.com/RainbowMellow/smart-home-backend/'
+			}	
+		}
+		stage('Build frontend and backend in parallel') { // checks that it can build before pushing projects to dockerhub
             steps {
-			/*
 				parallel(
-					buildWeb: {
-						sh "dotnet build src/WebUI/WebUI.csproj"
-						sh "docker build ./src/WebUI -t gruppe1devops/todoit-webui"
+					buildFrontend: {
+						// sh "npm install"
+						// sh "ng build"
+						// sh "docker build ./frontend -t tr0els/frontend"
 
 					},
-					buildApi: {
-						sh "dotnet build src/API/API.csproj"
-						sh "docker build ./src/API -t gruppe1devops/todoit-api"
+					buildBackend: {
+						sh "npm install"
+						sh "npm run build"
+						sh "docker build ./backend -t tr0els/backend"
 					}
 				)
-			*/
-			
-	echo "===== Pulling frontend + backend from 2 remote branches ====="
-    dir('frontend') {
-		git branch: 'DevOps',
-        url: 'https://github.com/RainbowMellow/smart-home-frontend/'
-    }
-    dir('backend') {
-		git branch: 'DevOps',
-        url: 'https://github.com/RainbowMellow/smart-home-backend/'
-    }
-
-    // sh('. frontend/build.sh')
-    // sh('. backend/build.sh')
-			
-                dir('frontend') {
-			sh "npm install"
-            sh "npm run build"			
-				}
 			}
 		}
         stage("Build database") {
@@ -47,7 +39,7 @@ pipeline {
         }
         stage("Test API") {
             steps {
-                sh "dotnet test test/UnitTest/UnitTest.csproj"
+                // sh "dotnet test test/UnitTest/UnitTest.csproj"
             }
         }
 		stage("Login on dockerhub") {
@@ -58,26 +50,26 @@ pipeline {
 				}
 			}
 		}
-        stage("Deliver Web and Api") {
+        stage("Deliver frontend and backend") { // deliver so it can be shared with customer/other developers
             steps {
 				parallel(
-					deliverWeb: {
-						sh "docker push gruppe1devops/todoit-webui"
+					deliverFrontend: {
+						sh "docker push troels/todoit-webui"
 					},
-					deliverApi: {
-						sh "docker push gruppe1devops/todoit-api"
-					}
+					// deliverBackend: {
+					// 	sh "docker push gruppe1devops/todoit-api"
+					// }
 				)
             }
         }
-        stage("Release staging environment") {
+        stage("Release staging environment") { // pull/download to staging/test environment
             steps {
 				sh "docker-compose pull"
-				sh "docker-compose up flyway"
-				sh "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d frontend backend"
+				// sh "docker-compose up flyway"
+				// sh "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d frontend backend"
             }
         }
-        stage("Automated acceptance test") {
+        stage("Automated acceptance test") { // if this is ok we can release to prod
             steps {
                 echo "===== REQUIRED: Will use Selenium to execute automatic acceptance tests ====="
             }
