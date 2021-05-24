@@ -1,5 +1,5 @@
 import {SmartItem} from '../models/smartItem.model';
-import {Action, Selector, State, StateContext} from '@ngxs/store';
+import {Action, Selector, State, StateContext, Store} from '@ngxs/store';
 import {Injectable} from '@angular/core';
 import {SmartItemService} from '../services/smart-item.service';
 import {Subscription} from 'rxjs';
@@ -21,7 +21,9 @@ import {
 } from './smartItem.actions';
 import {patch, updateItem} from '@ngxs/store/operators';
 import {LogService} from '../services/log.service';
-import {UserStateModel} from './user.state';
+import {UserState, UserStateModel} from './user.state';
+import {filter, map, take} from 'rxjs/operators';
+import {User} from '../models/user.model';
 
 export interface SmartItemStateModel {
   smartItems: SmartItem[];
@@ -41,7 +43,8 @@ export class SmartItemState {
   private createdSmartItemsUnsub: Subscription | undefined;
   private toggledSmartItemsUnsub: Subscription | undefined;
   constructor(private smartItemService: SmartItemService,
-              private logService: LogService) {
+              private logService: LogService,
+              private store: Store) {
   }
 
   @Selector()
@@ -123,8 +126,8 @@ export class SmartItemState {
         smartItems[index] = smartItem;
         ctx.dispatch(new UpdateSmartItems(smartItems));
         this.logService.triggerLogMessage({
-          userString: 'test user',
           // userString: uctx.getState().loggedInUser.name,
+          userString: 'test user',
           message: `${smartItem.name} was updated`, // maybe add more detailed description here
           item: smartItem,
           timeStamp: new Date()
@@ -153,7 +156,8 @@ export class SmartItemState {
         smartItems.push(smartItem);
         ctx.dispatch(new UpdateSmartItems(smartItems));
         this.logService.triggerLogMessage({
-          userString: uctx.getState().loggedInUser.name,
+          // userString: uctx.getState().loggedInUser.name,
+          userString: 'test user',
           message: `${smartItem.name} was created`,
           item: smartItem,
           timeStamp: new Date()
@@ -171,12 +175,10 @@ export class SmartItemState {
   @Action(ToggleSmartItem)
   toggleSmartItem(ctx: StateContext<SmartItemStateModel>, action: ToggleSmartItem): void {
     this.smartItemService.toggleSmartItem(action.toggleDto);
-    console.log('state toggle smartItem called');
   }
 
   @Action(ListenForToggledSmartItem)
   listenForToggledSmartItem(ctx: StateContext<SmartItemStateModel>, uctx: StateContext<UserStateModel>): void {
-    console.log('state listen for toggle smartItem was called');
     this.toggledSmartItemsUnsub = this.smartItemService.listenForToggledSmartItem()
       .subscribe(toggleDto => {
         ctx.setState(
@@ -187,8 +189,17 @@ export class SmartItemState {
         );
         const smartItem = ctx.getState().smartItems.find(item => item.id === toggleDto.id);
         const on = (toggleDto.on) ? 'on' : 'off';
+        /*let name = '';
+        this.store.select(UserState.loggedInUser)
+          .pipe(
+            filter(u => u !== undefined),
+            take(1),
+            map(u => {
+              name = u.name;
+            })
+          );*/
         this.logService.triggerLogMessage({
-          // userString: uctx.getState().loggedInUser.name,
+          // userString: name,
           userString: 'test user',
           message: `${smartItem.name} was turned ${on}`,
           item: smartItem,
