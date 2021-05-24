@@ -1,0 +1,20 @@
+<div *ngIf="loggedInUser$ | async as user">
+  <span>You are logged in as {{user.name}} </span>
+<button (click)="requestLogout()">Logout</button>
+</div>
+<div class="row align-items-center justify-content-center vh-100" *ngIf="!(loggedInUser$ | async)">
+  <div class="card">
+    <div class="card-body">
+      <form>
+        <h2>Enter name to login</h2>
+        <div class="form-group">
+          <label for="nameFormControl">Enter name:</label>
+          <input type="text" [formControl]="nameFormControl" id="nameFormControl">
+        </div>
+        <div class="row justify-content-end">
+          <button type="button" class="btn btn-primary" (click)="requestLogin()">Send name</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
