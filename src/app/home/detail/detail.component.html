@@ -1,4 +1,4 @@
-<div class="card detailCard" *ngIf="selectedSmartItem$ | async as selectedSmartItem">
+<div class="card detail-card" *ngIf="selectedSmartItem$ | async as selectedSmartItem">
   {{selectedSmartItem | json}}
   <div class="card-body d-flex flex-column rounded shadow-sm">
     <div *ngIf="!selectedSmartItem">
@@ -17,15 +17,15 @@
         </div>
 
         <div class="form-group row">
-          <label for="name" class="col-sm-3 col-form-label">Name</label>
-          <div class="col-sm-9 form-inline">
+          <label for="name" class="col-sm-4 col-form-label">Name</label>
+          <div class="col-sm-8 form-inline">
             <input type="text" class="form-control" formControlName="name" id="name">
           </div>
         </div>
 
         <div class="form-group row">
-          <label for="category" class="col-sm-3 col-form-label">Category</label>
-          <div class="col-sm-9 form-inline">
+          <label for="category" class="col-sm-4 col-form-label">Category</label>
+          <div class="col-sm-8 form-inline">
             <select id="category" class="form-control" formControlName="category">
               <option *ngFor="let category of categories$ | async" [value]="category.id">{{category.name}}</option>
             </select>
@@ -33,15 +33,15 @@
         </div>
 
         <div class="form-group row">
-          <label for="xPos" class="col-sm-3 col-form-label">X-pos</label>
-          <div class="col-sm-9 form-inline">
+          <label for="xPos" class="col-sm-4 col-form-label">X-pos</label>
+          <div class="col-sm-8 form-inline">
             <input type="text" class="form-control" formControlName="xPos" id="xPos">
           </div>
         </div>
 
         <div class="form-group row">
-          <label for="yPos" class="col-sm-3 col-form-label">Y-pos</label>
-          <div class="col-sm-9 form-inline">
+          <label for="yPos" class="col-sm-4 col-form-label">Y-pos</label>
+          <div class="col-sm-8 form-inline">
             <input type="text" class="form-control" formControlName="yPos" id="yPos">
           </div>
         </div>
