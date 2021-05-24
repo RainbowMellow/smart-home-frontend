@@ -35,8 +35,8 @@ pipeline {
     // sh('. backend/build.sh')
 			
                 dir('frontend') {
-			sh ". frontend/npm install"
-            sh ". frontend/npm run build"			
+			sh "npm install"
+            sh "npm run build"			
 				}
 			}
 		}
