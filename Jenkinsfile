@@ -21,6 +21,7 @@ pipeline {
 				)
 			*/
 			
+	echo "===== Pulling frontend + backend from 2 remote branches ====="
     dir('frontend') {
 		git branch: 'DevOps',
         url: 'https://github.com/RainbowMellow/smart-home-frontend/'
