@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-const config: SocketIoConfig = { url: 'https://smarthome-backend.herokuapp.com', options: {} };
+const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
 @NgModule({
   declarations: [
