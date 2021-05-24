@@ -22,12 +22,12 @@ pipeline {
 			*/
 			
     dir('frontend') {
+		git branch: 'DevOps',
         git url: 'https://github.com/RainbowMellow/smart-home-frontend/'
-		git checkout DevOps
     }
     dir('backend') {
+		git branch: 'DevOps',
         git url: 'https://github.com/RainbowMellow/smart-home-backend/'
-		git checkout DevOps
     }
 
     // sh('. frontend/build.sh')
