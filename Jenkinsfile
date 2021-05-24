@@ -22,10 +22,10 @@ pipeline {
 			*/
 			
     dir('frontend') {
-        git url: 'https://github.com/RainbowMellow/smart-home-frontend'
+        git url: 'https://github.com/RainbowMellow/smart-home-frontend/tree/DevOps'
     }
     dir('backend') {
-        git url: 'https://github.com/RainbowMellow/smart-home-backend'
+        git url: 'https://github.com/RainbowMellow/smart-home-backend/tree/DevOps'
     }
 
     // sh('. frontend/build.sh')
