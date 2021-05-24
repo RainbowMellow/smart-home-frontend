@@ -31,8 +31,10 @@ pipeline {
     // sh('. frontend/build.sh')
     // sh('. backend/build.sh')
 			
-            sh ". frontend/npm install"
+                dir('frontend') {
+			sh ". frontend/npm install"
             sh ". frontend/npm run build"			
+				}
 			}
 		}
         stage("Build database") {
