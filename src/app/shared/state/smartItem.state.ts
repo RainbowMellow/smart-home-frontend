@@ -123,7 +123,8 @@ export class SmartItemState {
         smartItems[index] = smartItem;
         ctx.dispatch(new UpdateSmartItems(smartItems));
         this.logService.triggerLogMessage({
-          userString: uctx.getState().loggedInUser.name,
+          userString: 'test user',
+          // userString: uctx.getState().loggedInUser.name,
           message: `${smartItem.name} was updated`, // maybe add more detailed description here
           item: smartItem,
           timeStamp: new Date()
@@ -188,7 +189,7 @@ export class SmartItemState {
         const on = (toggleDto.on) ? 'on' : 'off';
         this.logService.triggerLogMessage({
           // userString: uctx.getState().loggedInUser.name,
-          userString: 'tralala',
+          userString: 'test user',
           message: `${smartItem.name} was turned ${on}`,
           item: smartItem,
           timeStamp: new Date()
