@@ -1,10 +1,19 @@
-# Serve app with nginx server
+FROM node:14
 
-# Use official nginx image as the base image
-FROM nginx:latest
+# Create app directory
+WORKDIR /usr/src/app
 
-# Copy the build output to replace the default nginx contents.
-COPY ./dist/smart-home-frontend /usr/share/nginx/html
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
 
-# Expose port 80
+RUN npm install
+# If you are building your code for production
+# RUN npm ci --only=production
+
+# Bundle app source
+COPY . .
+
 EXPOSE 80
+CMD [ "node", "server.js" ]
