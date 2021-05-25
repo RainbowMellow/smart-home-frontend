@@ -3,10 +3,10 @@ import {Action, Selector, State, StateContext} from '@ngxs/store';
 import {
   ListenForSelectedSmartItem,
   UpdateSelectedSmartItemState,
-  UpdateSelectedSmartItem,
+  UpdateSelectedSmartItem, StopListeningForSelectedSmartItem,
 } from './selectedSmartItem.action';
 import {SmartItem} from '../models/smartItem.model';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 
 export interface SelectedSmartItemStateModel {
   selectedSmartItem: SmartItem;
@@ -21,6 +21,7 @@ export interface SelectedSmartItemStateModel {
 @Injectable()
 export class SelectedSmartItemState {
   private selectedSmartItem: BehaviorSubject<SmartItem>;
+  private unsub: Subscription | undefined;
 
   constructor() {
     this.selectedSmartItem = new BehaviorSubject<SmartItem>(null);
@@ -33,10 +34,17 @@ export class SelectedSmartItemState {
 
   @Action(ListenForSelectedSmartItem)
   ListenForSelectedSmartItem(ctx: StateContext<SelectedSmartItemStateModel>): void {
-    this.selectedSmartItem.asObservable()
+    this.unsub = this.selectedSmartItem.asObservable()
       .subscribe(selectedSmartItem =>  {
         ctx.dispatch(new UpdateSelectedSmartItemState(selectedSmartItem));
       });
+  }
+
+  @Action(StopListeningForSelectedSmartItem)
+  stopListeningForSelectedSmartItem(): void {
+    if (this.unsub) {
+      this.unsub.unsubscribe();
+    }
   }
 
   @Action(UpdateSelectedSmartItem)

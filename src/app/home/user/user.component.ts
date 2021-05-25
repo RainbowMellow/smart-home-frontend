@@ -16,6 +16,7 @@ import {FormControl} from '@angular/forms';
 import {isNewLine} from '@angular/compiler/src/chars';
 import {LogMessage} from '../../shared/models/log-message.model';
 import {TriggerNewLogMessage} from '../../shared/state/log.actions';
+import {UpdateSelectedSmartItem} from '../../shared/state/selectedSmartItem.action';
 
 @Component({
   selector: 'app-user',
@@ -46,6 +47,9 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   requestLogout(): void {
-    this.store.dispatch(new RequestLogout());
+    this.store.dispatch([
+      new RequestLogout(),
+      new UpdateSelectedSmartItem(null),
+    ]);
   }
 }

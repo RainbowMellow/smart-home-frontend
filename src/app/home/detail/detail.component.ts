@@ -20,7 +20,11 @@ import {CategoryState} from '../../shared/state/category.state';
 import {Observable} from 'rxjs';
 import {ListenForAllCategories, RequestAllCategories, StopListeningForAllCategories} from '../../shared/state/category.actions';
 import {SelectedSmartItemState} from '../../shared/state/selectedSmartItem.state';
-import {ListenForSelectedSmartItem} from '../../shared/state/selectedSmartItem.action';
+import {
+  ListenForSelectedSmartItem,
+  StopListeningForSelectedSmartItem,
+  UpdateSelectedSmartItem
+} from '../../shared/state/selectedSmartItem.action';
 
 @Component({
   selector: 'app-detail',
@@ -67,10 +71,10 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch(
-      new StopListeningForAllCategories(),
-      // stop ListenForSelectedSmartItem
-    );
+    this.store.dispatch([
+        new StopListeningForAllCategories(),
+        new StopListeningForSelectedSmartItem(),
+    ]);
   }
 
   updateSmartItem(): void {
@@ -80,7 +84,10 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   deleteSmartItem(): void {
-    this.store.dispatch(new DeleteSmartItem(this.selectedSmartItemId));
+    this.store.dispatch([
+      new DeleteSmartItem(this.selectedSmartItemId),
+      new UpdateSelectedSmartItem(null),
+    ]);
   }
 
   toggleSmartItem(): void {
