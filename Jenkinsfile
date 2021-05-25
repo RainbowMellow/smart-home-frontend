@@ -5,29 +5,31 @@ pipeline {
 		pollSCM 'H/3 * * * *'
 	}
     stages {
-		stage('Pull frontend and backend from github repos and put into their respective folders') {
-			dir('frontend') {
-				git branch: 'DevOps',
-				url: 'https://github.com/RainbowMellow/smart-home-frontend/'
+		stage('Pull frontend and backend from github') {
+			steps {
+				dir('frontend') { // put into own folder
+					git branch: 'DevOps',
+					url: 'https://github.com/RainbowMellow/smart-home-frontend/'
+				}
+				dir('backend') { // put into own folder
+					git branch: 'DevOps',
+					url: 'https://github.com/RainbowMellow/smart-home-backend/'
+				}
 			}
-			dir('backend') {
-				git branch: 'DevOps',
-				url: 'https://github.com/RainbowMellow/smart-home-backend/'
-			}	
 		}
-		stage('Build frontend and backend in parallel') { // checks that it can build before pushing projects to dockerhub
+		stage('Build frontend and backend in parallel') {
             steps {
 				parallel(
 					buildFrontend: {
-						// sh "npm install"
-						// sh "ng build"
-						// sh "docker build ./frontend -t tr0els/frontend"
-
+						sh "npm install" // move to Dockfile?
+						sh "ng build"
+						sh "docker build ./frontend -t tr0els/smarthome-frontend"
 					},
 					buildBackend: {
-						sh "npm install"
-						sh "npm run build"
-						sh "docker build ./backend -t tr0els/backend"
+						// sh "npm install"
+						// sh "npm run build"
+						// sh "docker build ./backend -t tr0els/smarthome-backend"
+						echo "no build backend for now"
 					}
 				)
 			}
@@ -40,6 +42,8 @@ pipeline {
         stage("Test API") {
             steps {
                 // sh "dotnet test test/UnitTest/UnitTest.csproj"
+				echo "No unit tests"
+
             }
         }
 		stage("Login on dockerhub") {
@@ -54,11 +58,12 @@ pipeline {
             steps {
 				parallel(
 					deliverFrontend: {
-						sh "docker push troels/todoit-webui"
+						sh "docker push tr0els/smarthome-frontend"
 					},
-					// deliverBackend: {
-					// 	sh "docker push gruppe1devops/todoit-api"
-					// }
+					deliverBackend: {
+					 	// sh "docker push tr0els/smarthome-backend"
+						echo "No backend delivery for now"
+					}
 				)
             }
         }
