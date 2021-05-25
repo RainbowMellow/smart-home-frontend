@@ -1,0 +1,13 @@
+pipeline {
+    agent any
+    parameters {
+        run description: '', filter: 'SUCCESSFUL', name: 'PROMOTE_BUILD', projectName: 'Smarthome deployment'
+    }
+    stages {
+        stage("Release to production") {
+            steps {
+                sh "docker-compose -p production -f docker-compose.yml -f docker-compose.prod.yml up -d"
+            }
+        }
+    }
+}
