@@ -32,6 +32,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   @Select(UserState.loggedInUser)
   loggedInUser$: Observable<User> | undefined;
 
+  isCreating = false;
+
   constructor(private store: Store) { }
 
   ngOnInit(): void {
@@ -58,5 +60,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       new StopListeningForEditedSmartItem(),
       new StopListeningForToggledSmartItem()
     ]);
+  }
+
+  onClickCreate(): void {
+    this.isCreating = true;
   }
 }
