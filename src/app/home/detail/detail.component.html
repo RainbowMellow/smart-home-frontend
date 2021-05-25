@@ -1,10 +1,6 @@
 <div class="card detail-card" *ngIf="selectedSmartItem$ | async as selectedSmartItem">
-  {{selectedSmartItem | json}}
   <div class="card-body d-flex flex-column rounded shadow-sm">
-    <div *ngIf="!selectedSmartItem">
-      Select a smart item to view its details.
-    </div>
-    <div *ngIf="selectedSmartItem" style="text-align: center">
+    <div style="text-align: center">
       <h4>Smart Item details</h4>
       <form [formGroup]="smartItemForm" (ngSubmit)="updateSmartItem()">
         <h6 style="text-align: center; margin-top: 20px;">Status: </h6>
@@ -51,6 +47,13 @@
           <button class="btn btn-primary mr-3" type="button" (click)="deleteSmartItem()">Delete</button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+<div class="card detail-card" *ngIf="!(selectedSmartItem$ | async)">
+  <div class="card-body d-flex flex-column rounded shadow-sm">
+    <div style="text-align: center">
+      Select a smart item to view its details.
     </div>
   </div>
 </div>

@@ -1,8 +1,14 @@
-<p>Log:</p>
-<ul class="list-group">
-  <li class="list-group-item border-0" *ngFor="let message of logMessages$ | async">
-    {{message.timeStamp | date: 'shortTime'}} |
-    <span *ngIf="message.userString && message.userString.length > 0">{{message.userString}} | </span>
-    {{message.message}}
-  </li>
-</ul>
+<h4>Log:</h4>
+<div class="card log-card">
+  <div class="card-body d-flex">
+    <ul class="list-group">
+      <li class="list-group-item border-0" *ngFor="let message of logMessages$ | async">
+        {{message.timeStamp | date: 'shortTime'}}
+        <span *ngIf="message.userString && message.userString.length > 0"> | {{message.userString}}</span>
+        <br>
+        {{message.message}}
+      </li>
+    </ul>
+  </div>
+</div>
+

@@ -2,18 +2,25 @@
 
 <div *ngIf="loggedInUser$ | async">
 <div *ngIf="smartItems$ | async as smartItems">
-  <h1>Floorplan</h1>
-  <h2>Ground floor</h2>
   <div class="flex-container">
-    <div class="floorplan rounded shadow-sm">
-      <button type="button" *ngFor="let smartItem of smartItems"
-              [ngClass]="smartItem.on ? 'on' : 'off'"
-           class="btn smart-item switch"
-           style="top: {{smartItem.yPos}}px; left: {{smartItem.xPos}}px;"
-           ngbPopover="{{smartItem.name}}" triggers="mouseenter:mouseleave" (click)="onSelect(smartItem)">
-        {{smartItem.name}}
-      </button>
+    <div>
+      <app-log></app-log>
     </div>
+    <div style="text-align: center">
+      <h1>Floorplan</h1>
+      <h2>Ground floor</h2>
+      <div class="floorplan rounded shadow-sm">
+        <button type="button" *ngFor="let smartItem of smartItems"
+                [ngClass]="smartItem.on ? 'on' : 'off'"
+                class="btn smart-item switch"
+                style="top: {{smartItem.yPos}}px; left: {{smartItem.xPos}}px;"
+                ngbPopover="{{smartItem.name}}" triggers="mouseenter:mouseleave" (click)="onSelect(smartItem)">
+          {{smartItem.name}}
+        </button>
+      </div>
+    </div>
+
+
     <div>
       <app-detail class="details"></app-detail>
     </div>
@@ -21,6 +28,5 @@
   <br>
   <br>
 </div>
-<app-log></app-log>
 </div>
 

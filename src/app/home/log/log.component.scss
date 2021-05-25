@@ -1,3 +1,10 @@
 .list-group {
+  //
+}
+
+.log-card {
   overflow-y: auto;
+  overflow-wrap: break-word;
+  height: 550px;
+  width: 300px;
 }
