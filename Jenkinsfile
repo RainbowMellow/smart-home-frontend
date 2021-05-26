@@ -1,5 +1,12 @@
 pipeline {
     agent any
+    //parameters { 
+    //    choice(name: 'NODE_VERSION', choices: ['NodeJS 14.15.5'], description: '') 
+    //}
+    //
+    //tools {
+    //    nodejs 'NodeJS 14.15.5'
+    //}
 	triggers {
 		// cron 'H * * * *'
 		pollSCM 'H/3 * * * *'
@@ -35,6 +42,7 @@ pipeline {
 					},
 					backend: {
 						dir('backend') {
+						    // sh "npm cache clean --force"
 							sh "npm install"
 							sh "npm run build"
 							sh "docker build . -t tr0els/smarthome-backend"
@@ -48,13 +56,6 @@ pipeline {
 				echo "===== OPTIONAL: Will build the database (if using a state-based approach) ====="
 				sh "docker-compose --version"
 			}
-        }
-		
-        stage("Test API") {
-            steps {
-                // sh "dotnet test test/UnitTest/UnitTest.csproj"
-				echo "No unit tests"
-            }
         }
 		stage("Login on dockerhub") {
 			steps {
@@ -78,16 +79,15 @@ pipeline {
         }
         stage("Release to test") {
             steps {
-				dir('frontend') {
+				dir('backend') {
 					sh "docker-compose -p staging -f docker-compose.yml -f docker-compose.test.yml up -d"
-					// sh "docker-compose up"
-					// sh "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d frontend backend"
 				 }
             }
         }
-        stage("Automated acceptance test") { // if this is ok we can release to prod
+        stage("Automated acceptance test") {
             steps {
-                echo "===== REQUIRED: Will use Selenium to execute automatic acceptance tests ====="
+                echo "===== Will use Selenium to execute automatic acceptance tests ====="
+                echo "Not implemented"
             }
         }
     }

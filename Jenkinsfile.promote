@@ -1,8 +1,8 @@
 pipeline {
     agent any
-    // parameters {
-    //    run description: '', filter: 'SUCCESSFUL', name: 'PROMOTE_BUILD', projectName: 'Smarthome deployment'
-    // }
+	parameters {
+		run description: '', filter: 'SUCCESSFUL', name: 'PROMOTE_BUILD', projectName: 'Smarthome deployment'
+    }
     stages {
         stage("Release to production") {
             steps {
