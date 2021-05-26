@@ -4,9 +4,10 @@ FROM nginx
 
 WORKDIR /usr/share/nginx/html
 COPY ./test .
-#RUN chmod +x ./entrypoint.sh
+COPY ./entrypoint.sh .
+RUN chmod +x ./entrypoint.sh
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT [ "./entrypoint.sh" ]
 
 
 
