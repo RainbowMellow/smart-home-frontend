@@ -3,10 +3,10 @@
 #RUN mkdir -p /app
 #WORKDIR /app
 #COPY package.json /app
-RUN npm install
+#RUN npm install
 #COPY . /app
 #RUN npm run build --prod
-RUN npm run build
+#RUN npm run build
 
 # Stage 2
 #FROM nginx
