@@ -1,7 +1,4 @@
 pipeline {
-    environment {
-        PATH = "$PATH:/usr/local/bin"
-    }
     agent any
 	triggers {
 		// cron 'H * * * *'
@@ -30,6 +27,7 @@ pipeline {
             steps {
 				parallel(
 					frontend: {
+						sh "docker-compose --version"
 						sh "npm install"
 						sh "npm run build"
 						sh "docker build ./frontend -t tr0els/smarthome-frontend"
@@ -46,7 +44,6 @@ pipeline {
         stage("Build database") {
 			steps {
 				echo "===== OPTIONAL: Will build the database (if using a state-based approach) ====="
-				sh "docker-compose --version"
 			}
         }
 		
