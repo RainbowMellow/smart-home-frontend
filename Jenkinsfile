@@ -47,7 +47,6 @@ pipeline {
 			steps {
 				echo "===== OPTIONAL: Will build the database (if using a state-based approach) ====="
 				sh "docker-compose --version"
-				}
 			}
         }
 		
