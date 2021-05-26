@@ -77,7 +77,7 @@ pipeline {
             steps {
 				dir('backend') {
 					sh "docker-compose pull"
-					sh "docker-compose up"
+					// sh "docker-compose up"
 					// sh "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d frontend backend"
 				}
             }
