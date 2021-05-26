@@ -10,6 +10,7 @@ pipeline {
 				parallel(
 					frontend: {
 						dir('frontend') {
+							sh "/usr/local/bin/docker-compose --version"
 							git branch: 'DevOps',
 							url: 'https://github.com/RainbowMellow/smart-home-frontend/'
 						}
@@ -27,7 +28,6 @@ pipeline {
             steps {
 				parallel(
 					frontend: {
-						sh "docker-compose --version"
 						sh "npm install"
 						sh "npm run build"
 						sh "docker build ./frontend -t tr0els/smarthome-frontend"
