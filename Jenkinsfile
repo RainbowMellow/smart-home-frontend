@@ -1,7 +1,4 @@
 pipeline {
-    environment {
-        PATH = "$PATH:/usr/local/bin"
-    }
     agent any
 	triggers {
 		// cron 'H * * * *'
@@ -13,7 +10,6 @@ pipeline {
 				parallel(
 					frontend: {
 						dir('frontend') {
-							sh "docker-compose --version"
 							git branch: 'DevOps',
 							url: 'https://github.com/RainbowMellow/smart-home-frontend/'
 						}
@@ -47,6 +43,7 @@ pipeline {
         stage("Build database") {
 			steps {
 				echo "===== OPTIONAL: Will build the database (if using a state-based approach) ====="
+				sh "docker-compose --version"
 			}
         }
 		
