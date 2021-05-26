@@ -7,18 +7,20 @@ pipeline {
     stages {
 		stage('Git') {
 			steps {
-				frontend: {
-					dir('frontend') {
-						git branch: 'DevOps',
-						url: 'https://github.com/RainbowMellow/smart-home-frontend/'
+				parallel(
+					frontend: {
+						dir('frontend') {
+							git branch: 'DevOps',
+							url: 'https://github.com/RainbowMellow/smart-home-frontend/'
+						}
+					},
+					backend: {
+						dir('backend') {
+							git branch: 'DevOps',
+							url: 'https://github.com/RainbowMellow/smart-home-backend/'
+						}
 					}
-				}
-				backend: {
-					dir('backend') {
-						git branch: 'DevOps',
-						url: 'https://github.com/RainbowMellow/smart-home-backend/'
-					}
-				}
+				)
 			}
 		}
 		stage('Build') {
@@ -75,7 +77,7 @@ pipeline {
             steps {
 				dir('backend') {
 					sh "docker-compose pull"
-					sh "docker compose up"
+					sh "docker-compose up"
 					// sh "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d frontend backend"
 				}
             }
