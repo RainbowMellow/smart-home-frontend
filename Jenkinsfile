@@ -32,9 +32,9 @@ pipeline {
 						sh "docker build ./frontend -t tr0els/smarthome-frontend"
 					},
 					backend: {
-						// sh "npm install"
-						// sh "npm run build"
-						// sh "docker build ./backend -t tr0els/smarthome-backend"
+						sh "npm install"
+						sh "npm run build"
+						sh "docker build ./backend -t tr0els/smarthome-backend"
 						echo "not now"
 					}
 				)
@@ -68,8 +68,7 @@ pipeline {
 						sh "docker push tr0els/smarthome-frontend"
 					},
 					deliverBackend: {
-					 	// sh "docker push tr0els/smarthome-backend"
-						echo "not now"
+					 	sh "docker push tr0els/smarthome-backend"
 					}
 				)
             }
