@@ -3,7 +3,7 @@
 FROM nginx
 
 WORKDIR /usr/share/nginx/html
-COPY ./test .
+COPY ./testsss .
 RUN chmod +x ./entrypoint.sh
 
 ENTRYPOINT [ "./entrypoint.sh" ]
