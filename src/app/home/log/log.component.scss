@@ -2,9 +2,14 @@
   //
 }
 
-.log-card {
+.log-body {
   overflow-y: auto;
   overflow-wrap: break-word;
-  height: 550px;
-  width: 300px;
+  padding: 0;
+}
+
+.log-card {
+  height: 500px;
+  width: 250px;
+  margin: 10px;
 }

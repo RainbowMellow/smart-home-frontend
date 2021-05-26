@@ -6,9 +6,8 @@
     <div>
       <app-log></app-log>
     </div>
-    <div style="text-align: center">
-      <h1>Floorplan</h1>
-      <h2>Ground floor</h2>
+    <div>
+        <h2>Ground floor</h2>
       <div class="floorplan rounded shadow-sm">
         <button type="button" *ngFor="let smartItem of smartItems"
                 [ngClass]="smartItem.on ? 'on' : 'off'"
@@ -19,7 +18,6 @@
         </button>
       </div>
     </div>
-
 
     <div>
       <app-detail class="details"></app-detail>

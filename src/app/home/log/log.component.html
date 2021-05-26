@@ -1,6 +1,8 @@
-<h4>Log:</h4>
 <div class="card log-card">
-  <div class="card-body d-flex">
+  <div class="card-header">
+    <h2>Log:</h2>
+  </div>
+  <div class="card-body log-body d-flex">
     <ul class="list-group">
       <li class="list-group-item border-0" *ngFor="let message of logMessages$ | async">
         {{message.timeStamp | date: 'shortTime'}}
