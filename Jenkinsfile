@@ -12,7 +12,7 @@ pipeline {
 						git branch: 'DevOps',
 						url: 'https://github.com/RainbowMellow/smart-home-frontend/'
 					}
-				},
+				}
 				backend: {
 					dir('backend') {
 						git branch: 'DevOps',
