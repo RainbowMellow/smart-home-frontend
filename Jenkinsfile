@@ -44,8 +44,8 @@ pipeline {
 			}
 		}
         stage("Build database") {
-		    withEnv(["PATH=$PATH:~/.local/bin"]){
-				steps {
+			steps {
+					withEnv(["PATH=$PATH:~/.local/bin"]){
 					echo "===== OPTIONAL: Will build the database (if using a state-based approach) ====="
 					sh "docker-compose --version"
 				}
