@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage("Release to production") {
             steps {
-				withEnv(["PATH=$PATH:~/.local/bin"]){
+				withEnv(["PATH=$PATH:~/usr/local/bin/docker-compose"]){
 					sh "docker-compose -p production -f docker-compose.yml -f docker-compose.prod.yml up -d"
 				}
             }
