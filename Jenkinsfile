@@ -27,15 +27,18 @@ pipeline {
             steps {
 				parallel(
 					frontend: {
-						sh "npm install"
-						sh "npm run build"
-						sh "docker build ./frontend -t tr0els/smarthome-frontend"
+						dir('frontend') {
+							sh "npm install"
+							sh "npm run build"
+							sh "docker build . -t tr0els/smarthome-frontend"
+						}
 					},
 					backend: {
-						sh "npm install"
-						sh "npm run build"
-						sh "docker build ./backend -t tr0els/smarthome-backend"
-						echo "not now"
+						dir('backend') {
+							sh "npm install"
+							sh "npm run build"
+							sh "docker build . -t tr0els/smarthome-backend"
+						}
 					}
 				)
 			}
