@@ -6,7 +6,7 @@ COPY package.json /app
 RUN npm install
 COPY ./frontend /app
 #RUN npm run build --prod
-npm run build
+RUN npm run build
 
 # Stage 2
 FROM nginx
