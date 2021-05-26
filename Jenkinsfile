@@ -77,7 +77,8 @@ pipeline {
         stage("Release to test") {
             steps {
 				dir('frontend') {
-					sh "docker-compose up"
+					sh "docker-compose -p staging -f docker-compose.yml -f docker-compose.test.yml up -d"
+					// sh "docker-compose up"
 					// sh "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d frontend backend"
 				 }
             }
