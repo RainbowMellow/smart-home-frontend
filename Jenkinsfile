@@ -76,9 +76,10 @@ pipeline {
         }
         stage("Release to test") {
             steps {
-				sh "docker-compose pull"
-				// sh "docker-compose up"
-				// sh "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d frontend backend"
+				dir('frontend') {
+					sh "docker-compose up"
+					// sh "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d frontend backend"
+				 }
             }
         }
         stage("Automated acceptance test") { // if this is ok we can release to prod
