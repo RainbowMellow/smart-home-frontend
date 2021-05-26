@@ -51,12 +51,6 @@ pipeline {
 				)
 			}
 		}
-        stage("Build database") {
-			steps {
-				echo "===== OPTIONAL: Will build the database (if using a state-based approach) ====="
-				sh "docker-compose --version"
-			}
-        }
 		stage("Login on dockerhub") {
 			steps {
 				withCredentials([usernamePassword(credentialsId: 'DockerHubID', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')])
