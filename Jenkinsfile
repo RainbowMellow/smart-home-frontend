@@ -76,8 +76,8 @@ pipeline {
         stage("Release to test") {
             steps {
 				dir('backend') {
-					sh "docker-compose up" // no docker compose i frntend folder
-					// sh "docker-compose pull"
+					sh "docker-compose pull"
+					sh "docker compose up"
 					// sh "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d frontend backend"
 				}
             }
