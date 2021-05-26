@@ -27,8 +27,8 @@ pipeline {
             steps {
 				parallel(
 					frontend: {
-						// sh "npm install"
-						// sh "npm run build"
+						sh "npm install"
+						sh "npm run build"
 						sh "docker build ./frontend -t tr0els/smarthome-frontend"
 					},
 					backend: {
