@@ -45,11 +45,4 @@ export class UserComponent implements OnInit, OnDestroy {
       this.store.dispatch(new RequestLogin(user));
     }
   }
-
-  requestLogout(): void {
-    this.store.dispatch([
-      new RequestLogout(),
-      new UpdateSelectedSmartItem(null),
-    ]);
-  }
 }

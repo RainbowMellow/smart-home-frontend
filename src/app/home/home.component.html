@@ -1,35 +1,47 @@
 <app-user></app-user>
 
-<div *ngIf="loggedInUser$ | async">
-<div *ngIf="smartItems$ | async as smartItems">
-  <div class="flex-container">
-    <div>
-      <app-log></app-log>
-    </div>
-    <div>
-        <h2>Ground floor</h2>
-      <div class="floorplan rounded shadow-sm">
-        <button type="button" *ngFor="let smartItem of smartItems"
-                [ngClass]="smartItem.on ? 'on' : 'off'"
-                class="btn smart-item switch"
-                style="top: {{smartItem.yPos}}px; left: {{smartItem.xPos}}px;"
-                ngbPopover="{{smartItem.name}}" triggers="mouseenter:mouseleave" (click)="onSelect(smartItem)">
-          {{smartItem.name}}
-        </button>
-      </div>
-    </div>
+<div id="page" *ngIf="loggedInUser$ | async as user">
 
-    <div>
-      <app-detail *ngIf="!isCreating"></app-detail>
-      <app-create *ngIf="isCreating"></app-create>
+  <div id="menu">
+    <h1 id="logo">Smart Home <h3 style="display: inline">🏠</h3></h1>
+    <div class="logged-in">
+      <span>You are logged in as {{user.name}}</span>
+      <button type="button" class="btn btn-outline-primary ml-3" (click)="requestLogout()">Logout</button>
     </div>
   </div>
-  <br>
-  <br>
+
+  <div *ngIf="smartItems$ | async as smartItems">
+    <div class="wrapper">
+      <div>
+        <app-log></app-log>
+      </div>
+
+      <div class="card shadow">
+        <div class="card-header">
+          <div class="floorplan-top">
+            <h4>Ground floor</h4>
+            <button class="btn btn-primary ml-5" (click)="showCreate(true)">Create smart item</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="floorplan">
+            <button type="button" *ngFor="let smartItem of smartItems"
+                    [ngClass]="smartItem.on ? 'on' : 'off'"
+                    class="btn smart-item switch"
+                    style="top: {{smartItem.yPos}}px; left: {{smartItem.xPos}}px; white-space: nowrap;"
+                    ngbPopover="{{smartItem.name}}" triggers="mouseenter:mouseleave" (click)="onSelect(smartItem)">
+              <div class="smart-item-name">{{smartItem.name}}</div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <app-detail *ngIf="!isCreating"></app-detail>
+        <app-create *ngIf="isCreating"></app-create>
+      </div>
+    </div>
+    <br>
+    <br>
+  </div>
 </div>
-</div>
-
-<button class="btn btn-primary" (click)="showCreate(true)">Create</button>
-
-
-

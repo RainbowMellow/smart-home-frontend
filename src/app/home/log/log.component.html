@@ -1,11 +1,11 @@
-<div class="card log-card">
+<div class="card log-card shadow">
   <div class="card-header">
-    <h2>Log:</h2>
+    <h4>Activity log</h4>
   </div>
-  <div class="card-body log-body d-flex">
-    <ul class="list-group">
+  <div class="card-body log-body rounded">
+    <ul class="list-group log">
       <li class="list-group-item border-0" *ngFor="let message of logMessages$ | async">
-        {{message.timeStamp | date: 'shortTime'}}
+        {{message.timeStamp | date: 'd/M kl. HH:mm'}}
         <span *ngIf="message.userString && message.userString.length > 0"> | {{message.userString}}</span>
         <br>
         {{message.message}}

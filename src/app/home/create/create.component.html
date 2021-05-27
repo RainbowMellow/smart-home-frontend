@@ -1,7 +1,9 @@
 <div class="card detail-card">
-  <div class="card-body d-flex flex-column rounded shadow-sm">
+  <div class="card-header">
+    <h4>Create Smart Item</h4>
+  </div>
+  <div class="card-body d-flex flex-column rounded shadow">
     <div style="text-align: center">
-      <h4>Create Smart Item</h4>
       <form [formGroup]="smartItemForm" (ngSubmit)="createSmartItem()">
 
         <div class="form-group row">

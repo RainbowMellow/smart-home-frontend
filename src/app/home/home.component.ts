@@ -18,6 +18,7 @@ import {
 import {UserState} from '../shared/state/user.state';
 import {User} from '../shared/models/user.model';
 import {UpdateSelectedSmartItem} from '../shared/state/selectedSmartItem.action';
+import {RequestLogout} from '../shared/state/user.actions';
 
 @Component({
   selector: 'app-home',
@@ -65,5 +66,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   showCreate(show: boolean): void {
     this.isCreating = show;
+  }
+
+  requestLogout(): void {
+    this.store.dispatch([
+      new RequestLogout(),
+      new UpdateSelectedSmartItem(null),
+    ]);
   }
 }

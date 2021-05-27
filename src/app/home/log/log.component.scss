@@ -1,7 +1,3 @@
-.list-group {
-  //
-}
-
 .log-body {
   overflow-y: auto;
   overflow-wrap: break-word;
@@ -10,6 +6,21 @@
 
 .log-card {
   height: 500px;
-  width: 250px;
-  margin: 10px;
+  width: 240px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0 5px 0 5px;
+}
+
+li {
+  font-size: 13px;
+  background-color: #f6f6f6;
+  margin-bottom: 10px;
+  border-radius: 30px;
+}
+
+li:last-child {
+  margin-bottom: 0px;
 }
