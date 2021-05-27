@@ -27,7 +27,7 @@
           <div class="floorplan">
             <button type="button" *ngFor="let smartItem of smartItems"
                     [ngClass]="smartItem.on ? 'on' : 'off'"
-                    class="btn smart-item switch"
+                    class="btn smart-item switch shadow-sm"
                     style="top: {{smartItem.yPos}}px; left: {{smartItem.xPos}}px; white-space: nowrap;"
                     ngbPopover="{{smartItem.name}}" triggers="mouseenter:mouseleave" (click)="onSelect(smartItem)">
               <div class="smart-item-name">{{smartItem.name}}</div>
