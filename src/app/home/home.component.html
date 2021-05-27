@@ -1,53 +1,47 @@
 <app-user></app-user>
 
-<div *ngIf="loggedInUser$ | async">
-<div *ngIf="smartItems$ | async as smartItems">
-  <h1>Floorplan</h1>
-  <h2>Ground floor</h2>
-  <div class="flex-container">
-    <div class="floorplan rounded shadow-sm">
-      <button type="button" *ngFor="let smartItem of smartItems"
-              [ngClass]="smartItem.on ? 'on' : 'off'"
-           class="btn smart-item switch"
-           style="top: {{smartItem.yPos}}px; left: {{smartItem.xPos}}px;"
-           ngbPopover="{{smartItem.name}}" triggers="mouseenter:mouseleave" (click)="onSelect(smartItem)">
-        {{smartItem.name}}
-      </button>
-    </div>
-    <div>
-      <app-detail class="details"></app-detail>
+<div id="page" *ngIf="loggedInUser$ | async as user">
+
+  <div id="menu">
+    <h1 id="logo">Smart Home <h3 style="display: inline">🏠</h3></h1>
+    <div class="logged-in">
+      <span>You are logged in as {{user.name}}</span>
+      <button type="button" class="btn btn-outline-primary ml-3" (click)="requestLogout()">Logout</button>
     </div>
   </div>
-  <br>
-  <br>
-  <h2>All Smart Items:</h2>
-  <table class="table table-hover">
-    <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col">X Position</th>
-      <th scope="col">Y Position</th>
-      <th scope="col">ON/OFF</th>
-    </tr>
-    </thead>
-    <tbody *ngFor="let smartItem of smartItems">
-      <tr>
-        <td>{{smartItem.name}}</td>
-        <td>{{smartItem.xPos}}</td>
-        <td>{{smartItem.yPos}}</td>
-        <td>
-          <span *ngIf="smartItem.on">On</span>
-          <span *ngIf="!smartItem.on">Off</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
 
-<app-log></app-log>
+  <div *ngIf="smartItems$ | async as smartItems">
+    <div class="wrapper">
+      <div>
+        <app-log></app-log>
+      </div>
 
-<div *ngIf="!smartItems$">
-  No Smart Items created yet..
-</div>
-</div>
+      <div class="card shadow">
+        <div class="card-header">
+          <div class="floorplan-top">
+            <h4>Floorplan</h4>
+            <button class="btn btn-primary ml-5" (click)="showCreate(true)">Create smart item</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="floorplan">
+            <button type="button" *ngFor="let smartItem of smartItems"
+                    [ngClass]="smartItem.on ? 'on' : 'off'"
+                    class="btn smart-item switch shadow-sm"
+                    style="top: {{smartItem.yPos}}px; left: {{smartItem.xPos}}px; white-space: nowrap;"
+                    ngbPopover="{{smartItem.name}}" triggers="mouseenter:mouseleave" (click)="onSelect(smartItem)">
+              <div class="smart-item-name">{{smartItem.name}}</div>
+            </button>
+          </div>
+        </div>
+      </div>
 
+      <div class="sidebar">
+        <app-detail *ngIf="!isCreating"></app-detail>
+        <app-create *ngIf="isCreating"></app-create>
+      </div>
+    </div>
+    <br>
+    <br>
+  </div>
+</div>

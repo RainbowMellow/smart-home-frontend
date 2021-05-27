@@ -1,5 +1,5 @@
 import {SmartItem} from '../models/smartItem.model';
-import {Action, Selector, State, StateContext} from '@ngxs/store';
+import {Action, Selector, State, StateContext, Store} from '@ngxs/store';
 import {Injectable} from '@angular/core';
 import {SmartItemService} from '../services/smart-item.service';
 import {Subscription} from 'rxjs';
@@ -21,7 +21,7 @@ import {
 } from './smartItem.actions';
 import {patch, updateItem} from '@ngxs/store/operators';
 import {LogService} from '../services/log.service';
-import {UserStateModel} from './user.state';
+import {UserState, UserStateModel} from './user.state';
 
 export interface SmartItemStateModel {
   smartItems: SmartItem[];
@@ -41,7 +41,8 @@ export class SmartItemState {
   private createdSmartItemsUnsub: Subscription | undefined;
   private toggledSmartItemsUnsub: Subscription | undefined;
   constructor(private smartItemService: SmartItemService,
-              private logService: LogService) {
+              private logService: LogService,
+              private store: Store) {
   }
 
   @Selector()
@@ -93,8 +94,9 @@ export class SmartItemState {
         const deletedItem = smartItems.find(item => item.id === id);
         smartItems = smartItems.filter((s) => s.id !== id);
         ctx.dispatch(new UpdateSmartItems(smartItems));
+        const user = this.store.selectSnapshot(UserState.loggedInUser);
         this.logService.triggerLogMessage({
-          userString: uctx.getState().loggedInUser.name,
+          userString: user.name,
           message: `${deletedItem.name} was removed`,
           timeStamp: new Date()
         });
@@ -122,9 +124,9 @@ export class SmartItemState {
         const index = smartItems.findIndex((s) => s.id === smartItem.id);
         smartItems[index] = smartItem;
         ctx.dispatch(new UpdateSmartItems(smartItems));
+        const user = this.store.selectSnapshot(UserState.loggedInUser);
         this.logService.triggerLogMessage({
-          userString: 'test user',
-          // userString: uctx.getState().loggedInUser.name,
+          userString: user.name,
           message: `${smartItem.name} was updated`, // maybe add more detailed description here
           item: smartItem,
           timeStamp: new Date()
@@ -152,8 +154,9 @@ export class SmartItemState {
         const smartItems = [...state.smartItems];
         smartItems.push(smartItem);
         ctx.dispatch(new UpdateSmartItems(smartItems));
+        const user = this.store.selectSnapshot(UserState.loggedInUser);
         this.logService.triggerLogMessage({
-          userString: uctx.getState().loggedInUser.name,
+          userString: user.name,
           message: `${smartItem.name} was created`,
           item: smartItem,
           timeStamp: new Date()
@@ -171,12 +174,10 @@ export class SmartItemState {
   @Action(ToggleSmartItem)
   toggleSmartItem(ctx: StateContext<SmartItemStateModel>, action: ToggleSmartItem): void {
     this.smartItemService.toggleSmartItem(action.toggleDto);
-    console.log('state toggle smartItem called');
   }
 
   @Action(ListenForToggledSmartItem)
-  listenForToggledSmartItem(ctx: StateContext<SmartItemStateModel>, uctx: StateContext<UserStateModel>): void {
-    console.log('state listen for toggle smartItem was called');
+  listenForToggledSmartItem(ctx: StateContext<SmartItemStateModel>): void {
     this.toggledSmartItemsUnsub = this.smartItemService.listenForToggledSmartItem()
       .subscribe(toggleDto => {
         ctx.setState(
@@ -187,9 +188,9 @@ export class SmartItemState {
         );
         const smartItem = ctx.getState().smartItems.find(item => item.id === toggleDto.id);
         const on = (toggleDto.on) ? 'on' : 'off';
+        const user = this.store.selectSnapshot(UserState.loggedInUser);
         this.logService.triggerLogMessage({
-          // userString: uctx.getState().loggedInUser.name,
-          userString: 'test user',
+          userString: user.name,
           message: `${smartItem.name} was turned ${on}`,
           item: smartItem,
           timeStamp: new Date()

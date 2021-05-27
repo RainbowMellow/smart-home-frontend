@@ -55,7 +55,7 @@ export class LogMessageState {
       .subscribe(message => {
         const state = ctx.getState();
         const messages = [...state.logMessages];
-        messages.push(message);
+        messages.unshift(message);
         ctx.dispatch(new UpdateLogMessages(messages));
       });
   }

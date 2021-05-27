@@ -5,6 +5,7 @@ import {Category} from '../../shared/models/category.model';
 import {EditSmartItemDto} from '../../shared/dtos/editSmartItem.dto';
 import {Select, Store} from '@ngxs/store';
 import {
+  CreateSmartItem,
   DeleteSmartItem,
   EditSmartItem,
   ListenForDeletedSmartItem,
@@ -20,21 +21,16 @@ import {CategoryState} from '../../shared/state/category.state';
 import {Observable} from 'rxjs';
 import {ListenForAllCategories, RequestAllCategories, StopListeningForAllCategories} from '../../shared/state/category.actions';
 import {SelectedSmartItemState} from '../../shared/state/selectedSmartItem.state';
-import {
-  ListenForSelectedSmartItem,
-  StopListeningForSelectedSmartItem,
-  UpdateSelectedSmartItem
-} from '../../shared/state/selectedSmartItem.action';
+import {ListenForSelectedSmartItem} from '../../shared/state/selectedSmartItem.action';
+import {CreateSmartItemDto} from '../../shared/dtos/createSmartItem.dto';
+import {HomeComponent} from '../home.component';
 
 @Component({
-  selector: 'app-detail',
-  templateUrl: './detail.component.html',
-  styleUrls: ['./detail.component.scss']
+  selector: 'app-create',
+  templateUrl: './create.component.html',
+  styleUrls: ['./create.component.scss']
 })
-export class DetailComponent implements OnInit, OnDestroy {
-  @Select(SelectedSmartItemState.selectedSmartItem)
-  selectedSmartItem$: Observable<SmartItem> | undefined;
-  selectedSmartItemId: number;
+export class CreateComponent implements OnInit, OnDestroy {
 
   @Select(CategoryState.categories)
   categories$: Observable<Category[]> | undefined;
@@ -58,43 +54,19 @@ export class DetailComponent implements OnInit, OnDestroy {
       },
       xPos: [''],
       yPos: [''],
-      on: ['']
-    });
-
-    this.selectedSmartItem$.subscribe((smartItem) => {
-      if (smartItem) {
-        this.selectedSmartItemId = smartItem.id;
-        this.smartItemForm.patchValue(smartItem);
-        this.smartItemForm.get('category').patchValue(smartItem.category.id);
-      }
     });
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch([
-        new StopListeningForAllCategories(),
-        new StopListeningForSelectedSmartItem(),
-    ]);
+    this.store.dispatch(
+      new StopListeningForAllCategories(),
+      // stop ListenForSelectedSmartItem
+    );
   }
 
-  updateSmartItem(): void {
-    const editDto: EditSmartItemDto = this.smartItemForm.value;
-    editDto.id = this.selectedSmartItemId;
-    this.store.dispatch(new EditSmartItem(editDto));
-  }
-
-  deleteSmartItem(): void {
-    this.store.dispatch([
-      new DeleteSmartItem(this.selectedSmartItemId),
-      new UpdateSelectedSmartItem(null),
-    ]);
-  }
-
-  toggleSmartItem(): void {
-    const toggleDto: ToggleDto = {
-      id: this.selectedSmartItemId,
-      on: !this.smartItemForm.value.on
-    };
-    this.store.dispatch(new ToggleSmartItem(toggleDto));
+  createSmartItem(): void {
+    const createDto: CreateSmartItemDto = this.smartItemForm.value;
+    this.store.dispatch(new CreateSmartItem(createDto));
+    this.smartItemForm.reset();
   }
 }
