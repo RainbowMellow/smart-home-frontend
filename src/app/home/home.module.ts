@@ -13,9 +13,10 @@ import { DetailComponent } from './detail/detail.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {CategoryState} from '../shared/state/category.state';
 import { SelectedSmartItemState } from '../shared/state/selectedSmartItem.state';
+import {CreateComponent} from './create/create.component';
 
 @NgModule({
-  declarations: [HomeComponent, LogComponent, UserComponent, DetailComponent],
+  declarations: [HomeComponent, LogComponent, UserComponent, DetailComponent, CreateComponent],
   imports: [
     CommonModule,
     HomeRoutingModule,

@@ -20,11 +20,16 @@
     </div>
 
     <div>
-      <app-detail class="details"></app-detail>
+      <app-detail *ngIf="!isCreating"></app-detail>
+      <app-create *ngIf="isCreating"></app-create>
     </div>
   </div>
   <br>
   <br>
 </div>
 </div>
+
+<button class="btn btn-primary" (click)="showCreate(true)">Create</button>
+
+
 
