@@ -11,7 +11,7 @@ import {NgxsLoggerPluginModule} from '@ngxs/logger-plugin';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CreateComponent } from './home/create/create.component';
 
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+const config: SocketIoConfig = { url: 'https://smarthome-backend.herokuapp.com', options: {} };
 
 @NgModule({
   declarations: [
