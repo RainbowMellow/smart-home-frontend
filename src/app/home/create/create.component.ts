@@ -67,5 +67,6 @@ export class CreateComponent implements OnInit, OnDestroy {
   createSmartItem(): void {
     const createDto: CreateSmartItemDto = this.smartItemForm.value;
     this.store.dispatch(new CreateSmartItem(createDto));
+    this.smartItemForm.reset();
   }
 }

@@ -17,7 +17,7 @@ import {
 } from '../shared/state/smartItem.actions';
 import {UserState} from '../shared/state/user.state';
 import {User} from '../shared/models/user.model';
-import {ListenForSelectedSmartItem, UpdateSelectedSmartItem} from '../shared/state/selectedSmartItem.action';
+import {UpdateSelectedSmartItem} from '../shared/state/selectedSmartItem.action';
 
 @Component({
   selector: 'app-home',
@@ -43,13 +43,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       new ListenForNewSmartItem(),
       new ListenForDeletedSmartItem(),
       new ListenForEditedSmartItem(),
-      new ListenForToggledSmartItem(),
+      new ListenForToggledSmartItem()
   ]);
   }
 
   onSelect(smartItem: SmartItem): void {
     console.log('smartItem selected: ' + smartItem.name);
     this.store.dispatch(new UpdateSelectedSmartItem(smartItem));
+    this.showCreate(false);
   }
 
   ngOnDestroy(): void {
@@ -62,7 +63,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  onClickCreate(): void {
-    this.isCreating = true;
+  showCreate(show: boolean): void {
+    this.isCreating = show;
   }
 }
