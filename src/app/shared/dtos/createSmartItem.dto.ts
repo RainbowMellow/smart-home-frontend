@@ -5,4 +5,5 @@ export interface CreateSmartItemDto {
   category?: Category;
   xPos: number;
   yPos: number;
+  userName?: string;
 }

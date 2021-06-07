@@ -5,6 +5,7 @@ import {SmartItem} from '../models/smartItem.model';
 import {EditSmartItemDto} from '../dtos/editSmartItem.dto';
 import {CreateSmartItemDto} from '../dtos/createSmartItem.dto';
 import {ToggleDto} from '../dtos/toggle.dto';
+import {DeleteSmartItemDto} from '../dtos/deleteSmartItem.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +22,8 @@ export class SmartItemService {
     this.socket.emit('requestSmartItems');
   }
 
-  deleteSmartItem(id: number): void {
-    this.socket.emit('deleteSmartItem', id);
+  deleteSmartItem(deleteDto: DeleteSmartItemDto): void {
+    this.socket.emit('deleteSmartItem', deleteDto);
   }
 
   listenForDeletedSmartItem(): Observable<number> {

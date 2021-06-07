@@ -17,11 +17,12 @@ import {
   StopListeningForEditedSmartItem,
   StopListeningForNewSmartItem, StopListeningForToggledSmartItem,
   ToggleSmartItem,
-  UpdateSmartItems
+  UpdateSmartItems, UpdateToggledSmartItem
 } from './smartItem.actions';
 import {patch, updateItem} from '@ngxs/store/operators';
 import {LogService} from '../services/log.service';
 import {UserState, UserStateModel} from './user.state';
+import {DeleteSmartItemDto} from '../dtos/deleteSmartItem.dto';
 
 export interface SmartItemStateModel {
   smartItems: SmartItem[];
@@ -82,24 +83,20 @@ export class SmartItemState {
 
   @Action(DeleteSmartItem)
   deleteSmartItem(ctx: StateContext<SmartItemStateModel>, action: DeleteSmartItem): void {
-    this.smartItemService.deleteSmartItem(action.id);
+    const user = this.store.selectSnapshot(UserState.loggedInUser);
+    const deleteDto = action.deleteDto;
+    deleteDto.userName = user.name;
+    this.smartItemService.deleteSmartItem(deleteDto);
   }
 
   @Action(ListenForDeletedSmartItem)
-  listenForDeletedSmartItem(ctx: StateContext<SmartItemStateModel>, uctx: StateContext<UserStateModel>): void {
+  listenForDeletedSmartItem(ctx: StateContext<SmartItemStateModel>): void {
     this.deletedSmartItemsUnsub = this.smartItemService.listenForDeletedSmartItem()
       .subscribe(id => {
         const state = ctx.getState();
         let smartItems = [...state.smartItems];
-        const deletedItem = smartItems.find(item => item.id === id);
         smartItems = smartItems.filter((s) => s.id !== id);
         ctx.dispatch(new UpdateSmartItems(smartItems));
-        const user = this.store.selectSnapshot(UserState.loggedInUser);
-        this.logService.triggerLogMessage({
-          userString: user.name,
-          message: `${deletedItem.name} was removed`,
-          timeStamp: new Date()
-        });
       });
   }
 
@@ -112,11 +109,14 @@ export class SmartItemState {
 
   @Action(EditSmartItem)
   editSmartItem(ctx: StateContext<SmartItemStateModel>, action: EditSmartItem): void {
-    this.smartItemService.editSmartItem(action.editDto);
+    const user = this.store.selectSnapshot(UserState.loggedInUser);
+    const editDto = action.editDto;
+    editDto.userName = user.name;
+    this.smartItemService.editSmartItem(editDto);
   }
 
   @Action(ListenForEditedSmartItem)
-  listenForEditedSmartItem(ctx: StateContext<SmartItemStateModel>, uctx: StateContext<UserStateModel>): void {
+  listenForEditedSmartItem(ctx: StateContext<SmartItemStateModel>): void {
     this.editedSmartItemsUnsub = this.smartItemService.listenForEditedSmartItem()
       .subscribe(smartItem => {
         const state = ctx.getState();
@@ -124,13 +124,6 @@ export class SmartItemState {
         const index = smartItems.findIndex((s) => s.id === smartItem.id);
         smartItems[index] = smartItem;
         ctx.dispatch(new UpdateSmartItems(smartItems));
-        const user = this.store.selectSnapshot(UserState.loggedInUser);
-        this.logService.triggerLogMessage({
-          userString: user.name,
-          message: `${smartItem.name} was updated`, // maybe add more detailed description here
-          item: smartItem,
-          timeStamp: new Date()
-        });
       });
   }
 
@@ -143,24 +136,20 @@ export class SmartItemState {
 
   @Action(CreateSmartItem)
   createSmartItem(ctx: StateContext<SmartItemStateModel>, action: CreateSmartItem): void {
-    this.smartItemService.createSmartItem(action.createDto);
+    const user = this.store.selectSnapshot(UserState.loggedInUser);
+    const createDto = action.createDto;
+    createDto.userName = user.name;
+    this.smartItemService.createSmartItem(createDto);
   }
 
   @Action(ListenForNewSmartItem)
-  listenForNewSmartItem(ctx: StateContext<SmartItemStateModel>, uctx: StateContext<UserStateModel>): void {
+  listenForNewSmartItem(ctx: StateContext<SmartItemStateModel>): void {
     this.createdSmartItemsUnsub = this.smartItemService.listenForCreatedSmartItem()
       .subscribe(smartItem => {
         const state = ctx.getState();
         const smartItems = [...state.smartItems];
         smartItems.push(smartItem);
         ctx.dispatch(new UpdateSmartItems(smartItems));
-        const user = this.store.selectSnapshot(UserState.loggedInUser);
-        this.logService.triggerLogMessage({
-          userString: user.name,
-          message: `${smartItem.name} was created`,
-          item: smartItem,
-          timeStamp: new Date()
-        });
       });
   }
 
@@ -173,29 +162,28 @@ export class SmartItemState {
 
   @Action(ToggleSmartItem)
   toggleSmartItem(ctx: StateContext<SmartItemStateModel>, action: ToggleSmartItem): void {
-    this.smartItemService.toggleSmartItem(action.toggleDto);
+    const user = this.store.selectSnapshot(UserState.loggedInUser);
+    const toggleDto = action.toggleDto;
+    toggleDto.userName = user.name;
+    this.smartItemService.toggleSmartItem(toggleDto);
   }
 
   @Action(ListenForToggledSmartItem)
   listenForToggledSmartItem(ctx: StateContext<SmartItemStateModel>): void {
     this.toggledSmartItemsUnsub = this.smartItemService.listenForToggledSmartItem()
       .subscribe(toggleDto => {
-        ctx.setState(
-          patch({
-            smartItems: updateItem<SmartItem>(item => item.id === toggleDto.id,
-              patch({ on: toggleDto.on}))
-          })
-        );
-        const smartItem = ctx.getState().smartItems.find(item => item.id === toggleDto.id);
-        const on = (toggleDto.on) ? 'on' : 'off';
-        const user = this.store.selectSnapshot(UserState.loggedInUser);
-        this.logService.triggerLogMessage({
-          userString: user.name,
-          message: `${smartItem.name} was turned ${on}`,
-          item: smartItem,
-          timeStamp: new Date()
-        });
+        ctx.dispatch(new UpdateToggledSmartItem(toggleDto));
       });
+  }
+
+  @Action(UpdateToggledSmartItem)
+  updateToggledSmartItem(ctx: StateContext<SmartItemStateModel>, action: UpdateToggledSmartItem): void {
+    ctx.setState(
+      patch({
+        smartItems: updateItem<SmartItem>(item => item.id === action.toggleDto.id,
+          patch({ on: action.toggleDto.on}))
+      })
+    );
   }
 
   @Action(StopListeningForToggledSmartItem)

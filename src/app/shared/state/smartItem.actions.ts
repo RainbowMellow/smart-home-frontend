@@ -2,6 +2,7 @@ import {SmartItem} from '../models/smartItem.model';
 import {EditSmartItemDto} from '../dtos/editSmartItem.dto';
 import {CreateSmartItemDto} from '../dtos/createSmartItem.dto';
 import {ToggleDto} from '../dtos/toggle.dto';
+import {DeleteSmartItemDto} from '../dtos/deleteSmartItem.dto';
 
 export class ListenForAllSmartItems {
   static readonly type = '[SmartItem] Listen For SmartItems';
@@ -21,7 +22,7 @@ constructor(public smartItems: SmartItem[]) {}
 }
 
 export class DeleteSmartItem {
-  constructor(public id: number) {}
+  constructor(public deleteDto: DeleteSmartItemDto) {}
   static readonly type = '[SmartItem] Delete SmartItem';
 }
 
@@ -62,6 +63,11 @@ export class StopListeningForNewSmartItem {
 export class ToggleSmartItem {
   constructor(public toggleDto: ToggleDto) {}
   static readonly type = '[SmartItem] Toggle SmartItem';
+}
+
+export class UpdateToggledSmartItem {
+  constructor(public toggleDto: ToggleDto) {}
+  static readonly type = '[SmartItem] Update toggled SmartItem';
 }
 
 export class ListenForToggledSmartItem {

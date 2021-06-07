@@ -6,4 +6,5 @@ export interface EditSmartItemDto {
   category: Category;
   xPos: number;
   yPos: number;
+  userName?: string;
 }

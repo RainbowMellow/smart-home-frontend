@@ -25,6 +25,7 @@ import {
   StopListeningForSelectedSmartItem,
   UpdateSelectedSmartItem
 } from '../../shared/state/selectedSmartItem.action';
+import {DeleteSmartItemDto} from '../../shared/dtos/deleteSmartItem.dto';
 
 @Component({
   selector: 'app-detail',
@@ -84,8 +85,9 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   deleteSmartItem(): void {
+    const deleteDto: DeleteSmartItemDto = { id: this.selectedSmartItemId };
     this.store.dispatch([
-      new DeleteSmartItem(this.selectedSmartItemId),
+      new DeleteSmartItem(deleteDto),
       new UpdateSelectedSmartItem(null),
     ]);
   }
