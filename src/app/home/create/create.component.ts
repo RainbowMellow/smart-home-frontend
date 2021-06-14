@@ -21,7 +21,6 @@ import {CategoryState} from '../../shared/state/category.state';
 import {Observable} from 'rxjs';
 import {ListenForAllCategories, RequestAllCategories, StopListeningForAllCategories} from '../../shared/state/category.actions';
 import {SelectedSmartItemState} from '../../shared/state/selectedSmartItem.state';
-import {ListenForSelectedSmartItem} from '../../shared/state/selectedSmartItem.action';
 import {CreateSmartItemDto} from '../../shared/dtos/createSmartItem.dto';
 import {HomeComponent} from '../home.component';
 
@@ -42,8 +41,7 @@ export class CreateComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.dispatch([
       new ListenForAllCategories(),
-      new RequestAllCategories(),
-      new ListenForSelectedSmartItem()
+      new RequestAllCategories()
     ]);
 
     this.smartItemForm = this.fb.group({

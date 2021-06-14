@@ -7,23 +7,14 @@ import {Select, Store} from '@ngxs/store';
 import {
   DeleteSmartItem,
   EditSmartItem,
-  ListenForDeletedSmartItem,
-  ListenForEditedSmartItem,
-  ListenForToggledSmartItem,
-  StopListeningForDeletedSmartItem,
-  StopListeningForEditedSmartItem,
-  StopListeningForToggledSmartItem,
   ToggleSmartItem
 } from '../../shared/state/smartItem.actions';
 import {ToggleDto} from '../../shared/dtos/toggle.dto';
 import {CategoryState} from '../../shared/state/category.state';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {ListenForAllCategories, RequestAllCategories, StopListeningForAllCategories} from '../../shared/state/category.actions';
 import {SelectedSmartItemState} from '../../shared/state/selectedSmartItem.state';
-import {
-  ListenForSelectedSmartItem,
-  StopListeningForSelectedSmartItem,
-  UpdateSelectedSmartItem
+import {UpdateSelectedSmartItemState
 } from '../../shared/state/selectedSmartItem.action';
 import {DeleteSmartItemDto} from '../../shared/dtos/deleteSmartItem.dto';
 
@@ -35,7 +26,9 @@ import {DeleteSmartItemDto} from '../../shared/dtos/deleteSmartItem.dto';
 export class DetailComponent implements OnInit, OnDestroy {
   @Select(SelectedSmartItemState.selectedSmartItem)
   selectedSmartItem$: Observable<SmartItem> | undefined;
+
   selectedSmartItemId: number;
+  unsub: Subscription | undefined;
 
   @Select(CategoryState.categories)
   categories$: Observable<Category[]> | undefined;
@@ -47,8 +40,7 @@ export class DetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.dispatch([
       new ListenForAllCategories(),
-      new RequestAllCategories(),
-      new ListenForSelectedSmartItem()
+      new RequestAllCategories()
     ]);
 
     this.smartItemForm = this.fb.group({
@@ -62,20 +54,24 @@ export class DetailComponent implements OnInit, OnDestroy {
       on: ['']
     });
 
-    this.selectedSmartItem$.subscribe((smartItem) => {
+    this.unsub = this.selectedSmartItem$.subscribe(smartItem => {
       if (smartItem) {
         this.selectedSmartItemId = smartItem.id;
         this.smartItemForm.patchValue(smartItem);
         this.smartItemForm.get('category').patchValue(smartItem.category.id);
       }
     });
+
   }
 
   ngOnDestroy(): void {
     this.store.dispatch([
-        new StopListeningForAllCategories(),
-        new StopListeningForSelectedSmartItem(),
+        new StopListeningForAllCategories()
     ]);
+    if (this.unsub) {
+      this.unsub.unsubscribe();
+    }
+    console.log('destroyed', 'destroying');
   }
 
   updateSmartItem(): void {
@@ -88,7 +84,7 @@ export class DetailComponent implements OnInit, OnDestroy {
     const deleteDto: DeleteSmartItemDto = { id: this.selectedSmartItemId };
     this.store.dispatch([
       new DeleteSmartItem(deleteDto),
-      new UpdateSelectedSmartItem(null),
+      new UpdateSelectedSmartItemState(null),
     ]);
   }
 
